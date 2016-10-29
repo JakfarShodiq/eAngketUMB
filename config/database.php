@@ -75,7 +75,7 @@ return [
             'password' => env('DB_PASSWORD', 'postgres'),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'public',
+            'schema' => 'angketumb',
             'sslmode' => 'prefer',
         ],
 

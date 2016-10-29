@@ -10,11 +10,15 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
-
 Auth::routes();
-
 Route::get('/home', 'HomeController@index');
+Route::resource('faculty', 'FacultyController');
+Route::post('/faculty/insert-record-baru',
+    array(
+        'as' => 'faculty.insert-om',
+        'uses' => 'FacultyController@insertRecord'
+    ));
+Route::get('/master/','HomeController@master');
