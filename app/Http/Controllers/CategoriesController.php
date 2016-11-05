@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\PicCategories;
+use App\Roles;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\CategoriesRequest;
+use App\Categories;
 use App\Http\Requests;
 
 class CategoriesController extends Controller
@@ -16,6 +20,10 @@ class CategoriesController extends Controller
     public function index()
     {
         //
+
+        $roles = Roles::where('id','>',1)->select('id','name')->get()->toArray();
+        return View('categories.index')
+            ->with('roles',$roles);
     }
 
     /**
@@ -37,6 +45,24 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         //
+//        dd($request);
+        $name = $request['name'];
+        $status = $request['status'];
+        $pic = $request['pic'];
+
+        $model = new Categories();
+        $model->name = $name;
+        $model->status = $status;
+        $model->save();
+
+        foreach ($pic as $pics) {
+            $pic_categories = new PicCategories();
+            $pic_categories->role_id = $pics;
+            $pic_categories->category_id = $model->id;
+            $pic_categories->save();
+        }
+
+        return redirect()->route('categories.index');
     }
 
     /**

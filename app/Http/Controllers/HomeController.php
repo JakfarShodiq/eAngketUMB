@@ -27,6 +27,6 @@ class HomeController extends Controller
     }
 
     public function master(){
-        return view('index');
+        return view('layouts.index');
     }
 }
