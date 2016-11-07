@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jenis_Pt;
 use App\Kelas;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
+use Illuminate\Http\Response;
+use Yajra\Datatables\Facades\Datatables;
 
 class JenisPTController extends Controller
 {
@@ -41,6 +43,22 @@ class JenisPTController extends Controller
     public function store(Request $request)
     {
         //
+//        dd($request);
+        if(\Request::ajax()){
+            dd('ajax request sent !');
+        }
+        $kelas = $request['kelas'];
+        $name = $request['name'];
+
+        $model = new Jenis_Pt();
+        $model->name = $name;
+        $model->kelas_category = $kelas;
+        $model->save();
+
+//        return redirect()->route('jenis_pertanyaan.index');
+        return response()->json([
+        'message'   => 'Sukses Bos',200
+        ]);
     }
 
     /**
@@ -86,5 +104,18 @@ class JenisPTController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getDatatables(){
+        $data = Jenis_Pt::select(['id','name','kelas_category']);
+
+        $datatables = Datatables::of($data)
+            ->addColumn('action', function ($data) {
+                return '<a href="#edit-'.$data->id.'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
+            })
+            ->editColumn('id', 'ID: {{$id}}')
+            ->make(true);
+
+        return $datatables;
     }
 }
