@@ -16,3 +16,7 @@ use Illuminate\Http\Request;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
+Route::post('/jenis-pertanyaan/add',array(
+    'uses'  =>  'JenisPTController@store',
+    'as'    =>  'api.jenis-pertanyaan.add'
+))->middleware('api');

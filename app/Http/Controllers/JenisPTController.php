@@ -19,9 +19,9 @@ class JenisPTController extends Controller
     public function index()
     {
         //
-        $kelas = Kelas::all()->pluck('name','id');
+        $kelas = Kelas::all()->pluck('name', 'id');
         return view('jenis_pertanyaan.index')
-            ->with('kelas',$kelas);
+            ->with('kelas', $kelas);
     }
 
     /**
@@ -37,16 +37,16 @@ class JenisPTController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //
 //        dd($request);
-        if(\Request::ajax()){
-            dd('ajax request sent !');
-        }
+        /* if($request->ajax()){
+             dd('ajax request sent !');
+         }*/
         $kelas = $request['kelas'];
         $name = $request['name'];
 
@@ -57,14 +57,16 @@ class JenisPTController extends Controller
 
 //        return redirect()->route('jenis_pertanyaan.index');
         return response()->json([
-        'message'   => 'Sukses Bos',200
-        ]);
+            'message' => '1 record inserted',
+            'sukses' => true,
+            'request' => $request
+        ], 200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -75,19 +77,21 @@ class JenisPTController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         //
+        $model = Jenis_Pt::find($id);
+        dd($model);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -98,22 +102,33 @@ class JenisPTController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
+        $model = Jenis_Pt::find($id);
+        $model->destroy();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Record id ' . $id . ' has been deleted !'
+        ], 200);
+
     }
 
-    public function getDatatables(){
-        $data = Jenis_Pt::select(['id','name','kelas_category']);
+    public function getDatatables()
+    {
+        $data = Jenis_Pt::select(['id', 'name', 'kelas_category']);
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
-                return '<a href="#edit-'.$data->id.'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
+                $edit = '<a href="' . route('jenis_pertanyaan.edit', $data->id) . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
+                $delete = '<a href="#" id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i> Delete</a>';
+                return $edit . $delete;
             })
-            ->editColumn('id', 'ID: {{$id}}')
+//            ->editColumn('id', 'ID: {{$id}}')
             ->make(true);
 
         return $datatables;

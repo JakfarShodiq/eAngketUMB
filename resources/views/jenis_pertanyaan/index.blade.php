@@ -15,18 +15,18 @@
                 <div class="box box-primary">
                     <div class="box-header"><h3 class="box-header">Kategori Pertanyaan</h3></div>
                     <div class="box-body">
-                        <form id="form-data" class="form-horizontal" role="form" method="POST" action="">
+                        <form id="form-data" class="form-horizontal" role="form" action="" url="">
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label for="kelas" class="col-md-4 control-label">Pilih Kelas</label>
                                 <div class="col-md-6">
-                                    {{ Form::select('kelas',$kelas) }}
+                                    {{ Form::select('kelas',$kelas,'',array('id'   =>  'kelas')) }}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="name" class="col-md-4 control-label">Nama</label>
                                 <div class="col-md-6">
-                                    {{ Form::text('name','',array('class'   => 'form-control'))  }}
+                                    {{ Form::text('name','',array('class'   => 'form-control','id'  =>  'name'))  }}
                                 </div>
                             </div>
 
@@ -56,16 +56,15 @@
 @endsection
 @section('script')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <script type="text/javascript">
         //        jQuery(document).ready(function () {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        var name = $('#name').val();
-        var kelas = $('#kelas').val();
+
         var table = $('#users-table').DataTable({
             processing: true,
             serverSide: true,
@@ -76,9 +75,9 @@
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
-
         $('#btn-add').click(function () {
-            alert('test');
+            var name = $('#name').val();
+            var kelas = $('#kelas').val();
             $.ajax({
                 url: "{{ URL::Route('jenis_pertanyaan.store') }}",
                 type: "post",
@@ -88,15 +87,40 @@
                     'kelas': kelas
                 },
                 success: function (result) {
-                    if (!result.success) {
-                        $('#report-data').append(result.message);
-                    } else {
-                        $('#report-data').append(result.result);
-                    }
+                    console.log(result.message);
+                    console.log(result.request);
                     table.ajax.reload();
                 }
             });
+            return false;
         });
-        //        });
+
+//        $('#btn-delete').click(function () {
+//            var del_url = $('btn-delete').attr('href');
+//            alert(del_url);
+//            $.ajax({
+//                        url: del_url,
+//                        type: 'DELETE',
+//                        success: function () {
+//                            console.log(result.message);
+//                            table.ajax.reload();
+//                        }
+//                    }
+//            )
+//            return false;
+//        });
+
+        function DeleteData(id) {
+            $.ajax({
+                url: id,
+                type: 'DELETE',
+                success: function (result) {
+                    console.log(result.message);
+                    console.log(result.request);
+                    table.ajax.reload();
+                }
+            })
+        }
+
     </script>
 @endsection
