@@ -10,7 +10,11 @@ class Kelas extends Model
     protected $table = 'kelas';
     protected $fillable = ['name','status'];
 
-    public function categories(){
-        return $this->hasMany('App\Categories');
+    public function category(){
+        return $this->belongsToMany('App\Categories','kelas_categories','id_kelas','id_category');
+    }
+
+    public function jenispt(){
+        return $this->hasMany('App\JenisPt','kelas_category');
     }
 }

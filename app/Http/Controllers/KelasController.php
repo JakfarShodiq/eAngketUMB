@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Categories;
 use App\Kelas;
-use App\Kelas_Categories;
+use App\KelasCategories;
 use Illuminate\Http\Request;
-
+use Yajra\Datatables\Facades\Datatables;
 use App\Http\Requests;
 
 class KelasController extends Controller
@@ -19,9 +19,9 @@ class KelasController extends Controller
     public function index()
     {
         //
-        $category = Categories::select('id','name')->get()->toArray();
+        $category = Categories::select('id', 'name')->get()->toArray();
         return view('kelas.index')
-            ->with('category',$category);
+            ->with('category', $category);
     }
 
     /**
@@ -37,36 +37,43 @@ class KelasController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //
 //        dd($request);
-        $name = $request['name'];
-        $status = $request['status'];
-        $categories = $request['categories'];
+        if ($request->ajax()) {
 
-        $model = new Kelas();
-        $model->name = $name;
-        $model->status = $status;
-        $model->save();
+            $name = $request['name'];
+            $status = $request['status'];
+            $categories = $request['categories'];
 
-        foreach ($categories as $category){
-            $kelas_category = new Kelas_Categories();
-            $kelas_category->id_kelas = $model->id;
-            $kelas_category->id_category = $category;
-            $kelas_category->save();
+            $model = new Kelas();
+            $model->name = $name;
+            $model->status = $status;
+            $model->save();
+
+            foreach ($categories as $category) {
+                $kelas_category = new KelasCategories();
+                $kelas_category->id_kelas = $model->id;
+                $kelas_category->id_category = $category;
+                $kelas_category->save();
+            }
+
+            return response()->json([
+                'status'    =>  'OK',
+                'message'   =>  'Row Inserted !'
+            ],200);
         }
-
         return redirect()->route('kelas.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -77,7 +84,7 @@ class KelasController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -88,8 +95,8 @@ class KelasController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -100,11 +107,35 @@ class KelasController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
+    }
+
+    public function getDatatables()
+    {
+        $data = Kelas::select(['id', 'name', 'status']);
+
+        $datatables = Datatables::of($data)
+            ->addColumn('status', function ($data) {
+                if ($data->status) {
+                    $status = 'ACTIVE';
+                }
+                $status = 'INACTIVE';
+
+                return $status;
+            })
+            ->addColumn('action', function ($data) {
+                $edit = '<a href="' . route('kelas.edit', $data->id) . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
+                $delete = '<a href="#" id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i> Delete</a>';
+                return $edit . $delete;
+            })
+//            ->editColumn('id', 'ID: {{$id}}')
+            ->make(true);
+
+        return $datatables;
     }
 }

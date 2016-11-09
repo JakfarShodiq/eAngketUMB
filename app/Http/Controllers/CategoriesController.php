@@ -20,7 +20,6 @@ class CategoriesController extends Controller
     public function index()
     {
         //
-
         $roles = Roles::where('id','>',1)->select('id','name')->get()->toArray();
         return View('categories.index')
             ->with('roles',$roles);

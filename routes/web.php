@@ -17,9 +17,16 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 Route::get('/master/','HomeController@master');
 Route::resource('categories','CategoriesController');
+
+Route::get('kelas/datatables',array(
+    'uses'  =>  'KelasController@getDatatables',
+    'as'    =>  'kelas.datatables'
+));
 Route::resource('kelas','KelasController');
+
 Route::get('jenis_pertanyaan/datatables',array(
     'uses'  =>  'JenisPTController@getDatatables',
     'as'    =>  'jenis_pertanyaan.datatables'
 ));
 Route::resource('jenis_pertanyaan','JenisPTController');
+Route::resource('pertanyaan','PertanyaanController');

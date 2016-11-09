@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Categories;
+use App\Kelas;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -15,7 +18,15 @@ class PertanyaanController extends Controller
      */
     public function index()
     {
-        //
+        $kelas = Kelas::all();
+        $jenis_pertanyaan = [];
+        $kelas_array = [];
+        foreach ($kelas as $kelass){
+            foreach ($kelass->category as $jenispts) {
+                $jenis_pertanyaan[] = [ $jenispts->id,$jenispts->name ];
+            };
+        }
+        return $jenis_pertanyaan;
     }
 
     /**
@@ -31,7 +42,7 @@ class PertanyaanController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,7 +53,7 @@ class PertanyaanController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -53,7 +64,7 @@ class PertanyaanController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -64,8 +75,8 @@ class PertanyaanController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -76,7 +87,7 @@ class PertanyaanController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jenis_Pt;
+use App\JenisPt;
 use App\Kelas;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -50,7 +50,7 @@ class JenisPTController extends Controller
         $kelas = $request['kelas'];
         $name = $request['name'];
 
-        $model = new Jenis_Pt();
+        $model = new JenisPt();
         $model->name = $name;
         $model->kelas_category = $kelas;
         $model->save();
@@ -108,7 +108,7 @@ class JenisPTController extends Controller
     public function destroy($id)
     {
         //
-        $model = Jenis_Pt::find($id);
+        $model = JenisPt::find($id);
         $model->destroy();
 
         return response()->json([
@@ -120,7 +120,7 @@ class JenisPTController extends Controller
 
     public function getDatatables()
     {
-        $data = Jenis_Pt::select(['id', 'name', 'kelas_category']);
+        $data = JenisPt::select(['id', 'name', 'kelas_category']);
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
