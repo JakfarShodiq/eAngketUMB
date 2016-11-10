@@ -11,7 +11,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-0">
+            <div class="col-md-12 col-md-offset-0">
                 <div class="box box-primary">
                     <div class="box-header"><h3 class="box-header">Kategori Kelas</h3></div>
                     <div class="box-body">

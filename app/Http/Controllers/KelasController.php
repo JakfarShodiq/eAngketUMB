@@ -138,4 +138,20 @@ class KelasController extends Controller
 
         return $datatables;
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function kelas_categories($id){
+        $kelas = Kelas::findOrFail($id);
+        $list_categories = [];
+        foreach ($kelas->category as $kelass){
+            $list_categories[] = [$kelass->id => $kelass->name];
+        }
+        return response()->json($list_categories,200);
+
+    }
 }
