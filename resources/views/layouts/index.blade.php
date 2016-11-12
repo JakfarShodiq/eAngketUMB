@@ -31,8 +31,8 @@
     <link rel="stylesheet" href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
     <link rel="stylesheet" href="plugins\datatables\jquery.dataTables.min.css">
     <link rel="stylesheet" href="plugins\datatables\dataTables.bootstrap.css">
-    <link rel="stylesheet" href="plugins\datatables\extensions\Responsive\responsive.dataTables.min.css">
     <link rel="stylesheet" href="plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css">
+    <link rel="stylesheet" href="plugins\datatables\extensions\Responsive\responsive.dataTables.min.css">
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -45,7 +45,6 @@
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <!-- Datatables -->
     <script src="plugins\datatables\jquery.dataTables.min.js"></script>
-    <script src="plugins\datatables\dataTables.bootstrap.min.js"></script>
     <script src="plugins\datatables\extensions\RawReorder\dataTables.rowReorder.min.js"></script>
     <script src="plugins\datatables\extensions\Responsive\dataTables.responsive.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -607,6 +606,6 @@
     <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-@yield('script');
+@yield('script')
 </body>
 </html>

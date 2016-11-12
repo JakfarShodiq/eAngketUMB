@@ -20,8 +20,8 @@ class KelasController extends Controller
     {
         //
         $category = Categories::select('id', 'name')->get()->toArray();
-        return view('kelas.index')
-            ->with('category', $category);
+//        return $category;
+        return view('kelas.index')->with('category', $category);
     }
 
     /**
@@ -63,9 +63,9 @@ class KelasController extends Controller
             }
 
             return response()->json([
-                'status'    =>  'OK',
-                'message'   =>  'Row Inserted !'
-            ],200);
+                'status' => 'OK',
+                'message' => 'Row Inserted !'
+            ], 200);
         }
         return redirect()->route('kelas.index');
     }
@@ -113,6 +113,11 @@ class KelasController extends Controller
     public function destroy($id)
     {
         //
+//        return 'DELETE RECORD ID '.$id;
+        $model = Kelas::find($id);
+        $model->destroy($id);
+
+        return redirect()->route('kelas.index')->with('status', 'Record successfully deleted !');
     }
 
     public function getDatatables()
@@ -124,13 +129,18 @@ class KelasController extends Controller
                 if ($data->status) {
                     $status = 'ACTIVE';
                 }
-                $status = 'INACTIVE';
+                else
+                    $status = 'INACTIVE';
 
                 return $status;
             })
             ->addColumn('action', function ($data) {
                 $edit = '<a href="' . route('kelas.edit', $data->id) . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
-                $delete = '<a href="#" id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i> Delete</a>';
+                $delete = "<form action='" . route('kelas.destroy', $data->id) . "' method='POST'>";
+                $delete .= "<input type='hidden' name='_method' value='DELETE'>";
+                $delete .= csrf_field();
+                $delete .= '<button type="submit" id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"> Delete</i></button>';
+                $delete .= '</form>';
                 return $edit . $delete;
             })
 //            ->editColumn('id', 'ID: {{$id}}')
@@ -145,13 +155,37 @@ class KelasController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function kelas_categories($id){
+    public function kelas_categories($id)
+    {
         $kelas = Kelas::findOrFail($id);
+        $jenispt = [];
         $list_categories = [];
-        foreach ($kelas->category as $kelass){
+        foreach ($kelas->category as $kelass) {
             $list_categories[] = [$kelass->id => $kelass->name];
         }
-        return response()->json($list_categories,200);
+        foreach ($kelas->jenispt as $jenis_pt) {
+            $jenispt[] = [$jenis_pt->id => $jenis_pt->name];
+        }
 
+//        return $jenispt;
+        $select_categories = '<select id="categories" name="categories" class="form-control select2">';
+        foreach ($list_categories as $list_category) {
+            foreach ($list_category as $key => $value) {
+                $select_categories .= "<option value='$key'>$value</option>";
+            }
+        }
+        $select_categories .= '</select>';
+        $select_jenispt = '<select id="categories" name="categories" class="form-control select2">';
+        foreach ($jenispt as $list_jenispt) {
+            foreach ($list_jenispt as $key => $value) {
+                $select_jenispt .= "<option value='$key'>$value</option>";
+            }
+        }
+        $select_jenispt .= '</select>';
+//        return $select;
+        return response()
+            ->json(['select_categories' => $select_categories
+                , 'select_jenispt' => $select_jenispt
+            ], 200);
     }
 }

@@ -32,5 +32,9 @@ Route::get('jenis_pertanyaan/datatables',array(
     'as'    =>  'jenis_pertanyaan.datatables'
 ));
 Route::resource('jenis_pertanyaan','JenisPTController');
+Route::get('pertanyaan/datatables',array(
+    'uses'  =>  'PertanyaanController@getDatatables',
+    'as'    =>  'pertanyaan.datatables'
+));
 Route::resource('pertanyaan','PertanyaanController');
 Route::resource('user','UserController');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\JenisPt;
 use App\Kelas;
+use App\KelasCategories;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Http\Response;
@@ -20,8 +21,10 @@ class JenisPTController extends Controller
     {
         //
         $kelas = Kelas::all()->pluck('name', 'id');
+        $categories = Kelas::first()->category->pluck('name', 'id');
         return view('jenis_pertanyaan.index')
-            ->with('kelas', $kelas);
+            ->with('kelas', $kelas)
+            ->with('categories',$categories);
     }
 
     /**
@@ -49,18 +52,30 @@ class JenisPTController extends Controller
          }*/
         $kelas = $request['kelas'];
         $name = $request['name'];
-
+        $categories = $request['categories'];
+        $kelas_category = KelasCategories::where('id_kelas','=',$kelas)
+        ->where('id_category','=',$categories)->first();
+//        return $request;
+//        return $kelas_category;
         $model = new JenisPt();
         $model->name = $name;
-        $model->kelas_category = $kelas;
-        $model->save();
+        $model->kelas_category = $kelas_category->id;
 
-//        return redirect()->route('jenis_pertanyaan.index');
-        return response()->json([
-            'message' => '1 record inserted',
-            'sukses' => true,
-            'request' => $request
-        ], 200);
+        if($model->save())
+        {
+            return response()->json([
+                'message' => '1 record inserted',
+                'sukses' => true,
+                'request' => $request
+            ], 200);
+        }
+        else
+            return response()->json([
+                'message' => 'Insert Failed',
+                'sukses' => false,
+                'request' => $request
+            ], 500);
+
     }
 
     /**
@@ -83,8 +98,8 @@ class JenisPTController extends Controller
     public function edit($id)
     {
         //
-        $model = Jenis_Pt::find($id);
-        dd($model);
+        $model = JenisPt::find($id);
+        return $model;
     }
 
     /**
@@ -120,7 +135,10 @@ class JenisPTController extends Controller
 
     public function getDatatables()
     {
-        $data = JenisPt::select(['id', 'name', 'kelas_category']);
+        $data = JenisPt::join('kelas_categories','kelas_categories.id','=','jenis_pt.kelas_category')
+            ->join('categories','kelas_categories.id_category','=','categories.id')
+            ->join('kelas','kelas_categories.id_kelas','=','kelas.id')
+            ->select(['jenis_pt.id as id', 'jenis_pt.name as jenispt_name', 'categories.name as categories_name','kelas.name as kelas_name']);
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {

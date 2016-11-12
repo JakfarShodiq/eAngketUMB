@@ -9,6 +9,7 @@ class Pertanyaan extends Model
 {
     //
     use SoftDeletes;
+    protected $table = 'pertanyaan';
     protected $fillable = [
       'text','jenis_pt','status','created_by'
     ];

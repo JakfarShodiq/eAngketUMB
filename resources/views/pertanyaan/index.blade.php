@@ -43,6 +43,17 @@
                             </div>
 
                             <div class="form-group">
+                                <div class="col-md-6">
+                                    <label for="true" class="col-md-6 control-label">
+                                        {{ Form::radio('status',1,true,array('id'    =>  'true')) }}
+                                        Active</label>
+                                    <label for="false" class="col-md-6 control-label">
+                                        {{ Form::radio('status',0,false,array('id'    =>  'false')) }}
+                                        Not Active</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button id="btn-add" name="btn-add" class="btn btn-success">
                                         Tambahkan
@@ -54,8 +65,11 @@
                         <table class="table table-bordered" id="users-table" name="users-table">
                             <thead>
                             <tr>
-                                <th>Name</th>
                                 <th>Kategory Kelas</th>
+                                <th>Kategory Layanan</th>
+                                <th>Jenis Pertanyaan</th>
+                                <th>Pertanyaan</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -80,35 +94,47 @@
         var table = $('#users-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('jenis_pertanyaan.datatables') }}',
+            ajax: '{{ route('pertanyaan.datatables') }}',
             columns: [
-                {data: 'name', name: 'name'},
-                {data: 'kelas_category', name: 'kelas_category'},
+//                ->select(['jenis_pt.id as id', 'jenis_pt.name as jenispt_name', 'categories.name as categories_name','kelas.name as kelas_name']);
+//                ->select(['pertanyaan.id as id', 'pertanyaan.text', 'pertanyaan.status','categories.name as categories_name','kelas.name as kelas_name']);
+                {data: 'kelas_name', name: 'kelas_name'},
+                {data: 'categories_name', name: 'categories_name'},
+                {data: 'jenis_pt_name', name: 'jenis_pt_name'},
+                {data: 'text', name: 'text'},
+                {data: 'status', name: 'status'},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
 
         $('#kelas').change(function () {
             var kelas = $('#kelas').val();
-            $.get('kelas/category/'+kelas, function (data) {
+            $.get('kelas/category/' + kelas, function (data) {
                 console.log(data);
                 $('#categories').empty();
-                $.each(data, function(index,subCatObj){
-                    $('#categories').append(''+subCatObj.name+'');
-                });
+                $('#categories').html(data.select_categories);
+                $('#jenispt').empty();
+                $('#jenispt').html(data.select_jenispt);
             })
         });
 
         $('#btn-add').click(function () {
-            var name = $('#name').val();
             var kelas = $('#kelas').val();
+            var categories = $('#categories').val();
+            var jenispt = $('#jenispt').val();
+            var pertanyaan = $('#pertanyaan').val();
+            var status = $("input[name='status']:checked").val();
+
             $.ajax({
-                url: "{{ URL::Route('jenis_pertanyaan.store') }}",
+                url: "{{ URL::Route('pertanyaan.store') }}",
                 type: "post",
                 data: {
                     _token: "<?php echo csrf_token(); ?>",
-                    'name': name,
-                    'kelas': kelas
+                    'kelas': kelas,
+                    'categories': categories,
+                    'jenis_pt': jenispt,
+                    'text': pertanyaan,
+                    'status': status
                 },
                 success: function (result) {
                     console.log(result.message);

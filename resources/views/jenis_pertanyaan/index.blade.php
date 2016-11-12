@@ -24,6 +24,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="categories" class="col-md-4 control-label">Pilih Jenis Pelayanan</label>
+                                <div class="col-md-6">
+                                    {{ Form::select('categories',$categories,'',array('id'   =>  'categories')) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="name" class="col-md-4 control-label">Nama</label>
                                 <div class="col-md-6">
                                     {{ Form::text('name','',array('class'   => 'form-control','id'  =>  'name'))  }}
@@ -42,7 +48,8 @@
                         <table class="table table-bordered" id="users-table" name="users-table">
                             <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Jenis Pertanyaan</th>
+                                <th>Kategory Layanan</th>
                                 <th>Kategory Kelas</th>
                                 <th>Action</th>
                             </tr>
@@ -70,25 +77,39 @@
             serverSide: true,
             ajax: '{{ route('jenis_pertanyaan.datatables') }}',
             columns: [
-                {data: 'name', name: 'name'},
-                {data: 'kelas_category', name: 'kelas_category'},
+                {data: 'jenispt_name', name: 'jenispt_name'},
+                {data: 'categories_name', name: 'categories_name'},
+                {data: 'kelas_name', name: 'kelas_name'},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
+
+        $('#kelas').change(function () {
+            var kelas = $('#kelas').val();
+            console.log(kelas);
+            $.get('kelas/category/'+kelas, function (data) {
+                console.log(data);
+                $('#categories').empty();
+                $('#categories').html(data.select_categories);
+                console.log(data.select_categories);
+            })
+        });
+
         $('#btn-add').click(function () {
             var name = $('#name').val();
             var kelas = $('#kelas').val();
+            var categories = $('#categories').val();
             $.ajax({
                 url: "{{ URL::Route('jenis_pertanyaan.store') }}",
                 type: "post",
                 data: {
                     _token: "<?php echo csrf_token(); ?>",
                     'name': name,
-                    'kelas': kelas
+                    'kelas': kelas,
+                    'categories': categories
                 },
                 success: function (result) {
-                    console.log(result.message);
-                    console.log(result.request);
+                    alert(result.message);
                     table.ajax.reload();
                 }
             });

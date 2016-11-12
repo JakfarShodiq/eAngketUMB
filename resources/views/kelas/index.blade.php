@@ -23,7 +23,11 @@
                                     {{ Form::text('name','',array('class'   => 'form-control','id'  =>  'name'))  }}
                                 </div>
                             </div>
-
+                            @if (session('status'))
+                                <div class="alert alert-success">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
                             <div class="form-group">
                                 <div class="col-md-6">
                                     @foreach($category as $categories)
