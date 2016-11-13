@@ -21,4 +21,8 @@ class JenisPt extends Model
     public function pertanyaan(){
         return $this->hasMany('App\Pertanyaan','jenis_pt');
     }
+
+    public function kelas_category(){
+        return $this->hasOne('\App\KelasCategories','kelas_category','id');
+    }
 }

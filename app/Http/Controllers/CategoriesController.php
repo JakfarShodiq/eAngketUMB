@@ -113,6 +113,7 @@ class CategoriesController extends Controller
     public function update(Request $request, $id)
     {
         //
+//        return dd($request);
         $name = $request['name'];
         $status = $request['status'];
         $pic = $request['pic'];
@@ -123,7 +124,8 @@ class CategoriesController extends Controller
         $model->save();
 
         // DELETE model id in pic_categories
-        $pic_categories = PicCategories::where('category_id', '=', $id)->delete();
+        PicCategories::where('category_id', '=', $id)->delete();
+
         foreach ($pic as $pics) {
             $pic_categories_model = new PicCategories();
             $pic_categories_model->category_id = $id;

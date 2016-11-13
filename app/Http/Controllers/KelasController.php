@@ -90,6 +90,18 @@ class KelasController extends Controller
     public function edit($id)
     {
         //
+        $model = Kelas::find($id);
+        $selected_category = clone $model;
+        $selected_category= $selected_category->category->pluck('id');
+        $selected = [];
+
+        $category = Categories::select('id', 'name')->get()->toArray();
+        foreach ($selected_category as $select) {
+            $selected[] = $select;
+        }
+        return view('kelas.edit')->with('model',$model)
+            ->with('selected',$selected)
+            ->with('category',$category);
     }
 
     /**
@@ -102,6 +114,26 @@ class KelasController extends Controller
     public function update(Request $request, $id)
     {
         //
+//        return $request;
+        $name = $request['name'];
+        $categories = $request['categories'];
+        $status = $request['status'];
+
+//        return dd($request);
+        $model = Kelas::find($id);
+        $model->name = $name;
+        $model->status = $status;
+        $model->save();
+
+        KelasCategories::where('id_kelas','=',$id)->delete();
+        foreach ($categories as $category){
+            $kelas_categories = new KelasCategories();
+            $kelas_categories->id_kelas = $id;
+            $kelas_categories->id_category = $category;
+            $kelas_categories->save();
+        }
+
+        return redirect()->route('kelas.index')->with('status','Data has been successfully updated !');
     }
 
     /**
@@ -115,7 +147,7 @@ class KelasController extends Controller
         //
 //        return 'DELETE RECORD ID '.$id;
         $model = Kelas::find($id);
-        $model->destroy($id);
+        $model->delete($id);
 
         return redirect()->route('kelas.index')->with('status', 'Record successfully deleted !');
     }

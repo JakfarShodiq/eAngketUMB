@@ -11,7 +11,7 @@
     Kelas
 @endsection
 @section('submenu')
-    Index
+    Edit Data
 @endsection
 @section('content')
     <div class="container">
@@ -26,12 +26,14 @@
                         @endif
                     </div>
                     <div class="box-body">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/kelas') }}">
+                        <form class="form-horizontal" role="form" method="POST"
+                              action="{{ route('kelas.update',$model->id) }}">
                             {{ csrf_field() }}
+                            {{ method_field('PUT') }}
                             <div class="form-group">
                                 <label for="name" class="col-md-4 control-label">Nama Kelas</label>
                                 <div class="col-md-6">
-                                    {{ Form::text('name','',array('class'   => 'form-control','id'  =>  'name'))  }}
+                                    {{ Form::text('name',$model->name,array('class'   => 'form-control','id'  =>  'name'))  }}
                                 </div>
                             </div>
 
@@ -42,8 +44,8 @@
                                     @foreach($category as $categories)
                                         <label class="checkbox-inline" for="roles-0">
                                             <label>
-                                            {{ Form::checkbox('categories[]',$categories['id'],null)}}
-                                            {{ $categories['name'] }}</label>
+                                                {{ Form::checkbox('categories[]',$categories['id'],(in_array($categories['id'],$selected) ? true : ''))}}
+                                                {{ $categories['name'] }}</label>
                                         </label>
                                     @endforeach
                                 </div>
@@ -70,74 +72,16 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
-                                    <button type="submit" id="btn-add" name="btn-add" class="btn btn-success">
-                                        Tambahkan
+                                    <button type="submit" class="btn btn-success" id="btn-add" name="btn-add">
+                                        Update
                                     </button>
+                                    <a href="{{ url()->previous() }}" class="btn btn-default">Back</a>
                                 </div>
                             </div>
                         </form>
-
-                        <table class="table table-bordered" id="kelas-table" name="kelas-table">
-                            <thead>
-                            <tr>
-                                <th>Nama Kelas</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                        </table>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection
-@section('script')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <script type="text/javascript">
-        //        jQuery(document).ready(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        var table = $('#kelas-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: '{{ route('kelas.datatables') }}',
-            columns: [
-                {data: 'name', name: 'name'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false}
-            ]
-        });
-        $('#btn-add').click(function () {
-            var name = $('#name').val();
-            var kelas = $('#kelas').val();
-            var categories = [];
-            $('input[name="categories[]"]:checked').each(function() {
-                categories.push(this.value);
-            });
-            var status = $("input[name=status]:checked").val();
-            $.ajax({
-                url: "{{ URL::Route('kelas.store') }}",
-                type: "post",
-                data: {
-                    _token: "<?php echo csrf_token(); ?>",
-                    'name': name,
-                    'status': true,
-                    'categories': categories,
-                    'status'    : status
-                },
-                success: function (result) {
-                    alert(result.message);
-                    table.ajax.reload();
-                }
-            });
-            return false;
-        });
-    </script>
 @endsection

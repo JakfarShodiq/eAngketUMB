@@ -89,6 +89,9 @@ class PertanyaanController extends Controller
     public function edit($id)
     {
         //
+        $model = Pertanyaan::find($id);
+
+        return view('pertanyaan.edit')->with('model',$model);
     }
 
     /**
@@ -101,6 +104,12 @@ class PertanyaanController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $model = Pertanyaan::find($id);
+        $model->text = $request['text'];
+        $model->status = $request['status'];
+        $model->save();
+
+        return redirect()->route('pertanyaan.index')->with('status', 'Record successfully updated !');
     }
 
     /**
@@ -112,6 +121,8 @@ class PertanyaanController extends Controller
     public function destroy($id)
     {
         //
+        $model = Pertanyaan::find($id)->delete();
+        return redirect()->route('pertanyaan.index')->with('status', 'Record successfully deleted !');
     }
 
     public function getDatatables()

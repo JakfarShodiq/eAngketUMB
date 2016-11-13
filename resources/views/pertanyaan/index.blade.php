@@ -7,13 +7,24 @@
  */
 ?>
 @extends('layouts.index')
-
+@section('header')
+    Master Pertanyaan
+@endsection
+@section('submenu')
+    Index
+@endsection
 @section('content')
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-md-offset-0">
                 <div class="box box-primary">
-                    <div class="box-header"><h3 class="box-header">Master Pertanyaan</h3></div>
+                    <div class="box-header">
+                        @if (session('status'))
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                    </div>
                     <div class="box-body">
                         <form id="form-data" class="form-horizontal" role="form" action="" url="">
                             {{ csrf_field() }}
@@ -42,14 +53,22 @@
                                 </div>
                             </div>
 
+                            <!-- Multiple Radios -->
                             <div class="form-group">
-                                <div class="col-md-6">
-                                    <label for="true" class="col-md-6 control-label">
-                                        {{ Form::radio('status',1,true,array('id'    =>  'true')) }}
-                                        Active</label>
-                                    <label for="false" class="col-md-6 control-label">
-                                        {{ Form::radio('status',0,false,array('id'    =>  'false')) }}
-                                        Not Active</label>
+                                <label class="col-md-4 control-label" for="status">Status</label>
+                                <div class="col-md-4">
+                                    <div class="radio">
+                                        <label for="status-0">
+                                            <input type="radio" name="status" id="status-0" value="1" checked="checked">
+                                            Active
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label for="status-1">
+                                            <input type="radio" name="status" id="status-1" value="0">
+                                            InActive
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

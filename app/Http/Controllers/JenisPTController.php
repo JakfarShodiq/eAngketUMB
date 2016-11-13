@@ -26,9 +26,10 @@ class JenisPTController extends Controller
         foreach ($categories as $cats){
             $category[] = $cats;
         }
+//        return $categories;
         return view('jenis_pertanyaan.index')
             ->with('kelas', $kelas)
-            ->with('categories',$category);
+            ->with('categories',$categories);
     }
 
     /**
@@ -58,7 +59,6 @@ class JenisPTController extends Controller
         $name = $request['name'];
         $categories = $request['categories'];
         $kelas_category = KelasCategories::where('id_kelas','=',$kelas)->where('id_category','=',$categories)->first();
-//        return $request;
 //        return $kelas_category;
         $model = new JenisPt();
         $model->name = $name;
@@ -102,7 +102,18 @@ class JenisPTController extends Controller
     {
         //
         $model = JenisPt::find($id);
-        return $model;
+        $kelas_category = KelasCategories::find($model->kelas_category);
+        $kelas = Kelas::all()->pluck('name', 'id');
+        $categories = Kelas::first()->category->pluck('name','id')->toArray();
+        $category = [];
+        foreach ($categories as $cats){
+            $category[] = $cats;
+        }
+
+        return view('jenis_pertanyaan.edit')->with('model',$model)
+            ->with('select',$kelas_category)
+            ->with('kelas',$kelas)
+            ->with('categories',$category);
     }
 
     /**
@@ -115,6 +126,12 @@ class JenisPTController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $name = $request['name'];
+        $model = JenisPt::find($id);
+        $model->name = $name;
+        $model->save();
+
+        return redirect()->route('jenis_pertanyaan.index')->with('status', 'Record successfully updated !');
     }
 
     /**
@@ -126,14 +143,10 @@ class JenisPTController extends Controller
     public function destroy($id)
     {
         //
-        $model = JenisPt::find($id);
-        $model->destroy();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Record id ' . $id . ' has been deleted !'
-        ], 200);
+        $model = JenisPt::find($id)->destroy($id);
 
+        return redirect()->route('jenis_pertanyaan.index')->with('status', 'Record successfully deleted !');
     }
 
     public function getDatatables()
@@ -146,7 +159,11 @@ class JenisPTController extends Controller
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
                 $edit = '<a href="' . route('jenis_pertanyaan.edit', $data->id) . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
-                $delete = '<a href="#" id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i> Delete</a>';
+                $delete = "<form action='" . route('jenis_pertanyaan.destroy', $data->id) . "' method='post'>";
+                $delete .= "<input type='hidden' name='_method' value='DELETE'>";
+                $delete .= csrf_field();
+                $delete .= '<button id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i> Delete</button>';
+                $delete .= '</form>';
                 return $edit . $delete;
             })
 //            ->editColumn('id', 'ID: {{$id}}')
