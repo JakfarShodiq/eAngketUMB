@@ -21,10 +21,14 @@ class JenisPTController extends Controller
     {
         //
         $kelas = Kelas::all()->pluck('name', 'id');
-        $categories = Kelas::first()->category->pluck('name', 'id');
+        $categories = Kelas::first()->category->pluck('name','id')->toArray();
+        $category = [];
+        foreach ($categories as $cats){
+            $category[] = $cats;
+        }
         return view('jenis_pertanyaan.index')
             ->with('kelas', $kelas)
-            ->with('categories',$categories);
+            ->with('categories',$category);
     }
 
     /**
@@ -53,13 +57,12 @@ class JenisPTController extends Controller
         $kelas = $request['kelas'];
         $name = $request['name'];
         $categories = $request['categories'];
-        $kelas_category = KelasCategories::where('id_kelas','=',$kelas)
-        ->where('id_category','=',$categories)->first();
+        $kelas_category = KelasCategories::where('id_kelas','=',$kelas)->where('id_category','=',$categories)->first();
 //        return $request;
 //        return $kelas_category;
         $model = new JenisPt();
         $model->name = $name;
-        $model->kelas_category = $kelas_category->id;
+        $model->kelas_category = $kelas_category['id'];
 
         if($model->save())
         {

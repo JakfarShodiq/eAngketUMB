@@ -34,7 +34,8 @@ class Categories extends Model
         return $this->hasMany('App\JenisPt','kelas_category','id');
     }
 
-    public function category(){
+    public function roles(){
         return $this->belongsToMany('App\Roles','pic_categories','category_id','role_id');
     }
+
 }

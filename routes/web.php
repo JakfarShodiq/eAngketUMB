@@ -11,30 +11,41 @@
 |
 */
 Route::get('/', function () {
-    return view('welcome');
+//    return view('welcome');
+    return redirect()->to('/home');
 });
 Auth::routes();
-Route::get('/home', 'HomeController@index');
-Route::get('/master/','HomeController@master');
-Route::resource('categories','CategoriesController');
-Route::get('kelas/category/{id}',[
-    'uses'  =>  'KelasController@kelas_categories',
-    'as'    =>  'kelas.category'
-]);
-Route::get('kelas/datatables',array(
-    'uses'  =>  'KelasController@getDatatables',
-    'as'    =>  'kelas.datatables'
-));
-Route::resource('kelas','KelasController');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', 'HomeController@index');
+    Route::get('/master/', 'HomeController@master');
+    Route::get('categories/role', [
+        'uses' => 'CategoriesController@testRelation',
+        'as' => 'categories.relation'
+    ]);
+    Route::get('categories/datatables', array(
+        'uses' => 'CategoriesController@getDatatables',
+        'as' => 'categories.datatables'
+    ));
+    Route::resource('categories', 'CategoriesController');
+    Route::get('kelas/category/{id}', [
+        'uses' => 'KelasController@kelas_categories',
+        'as' => 'kelas.category'
+    ]);
+    Route::get('kelas/datatables', array(
+        'uses' => 'KelasController@getDatatables',
+        'as' => 'kelas.datatables'
+    ));
+    Route::resource('kelas', 'KelasController');
 
-Route::get('jenis_pertanyaan/datatables',array(
-    'uses'  =>  'JenisPTController@getDatatables',
-    'as'    =>  'jenis_pertanyaan.datatables'
-));
-Route::resource('jenis_pertanyaan','JenisPTController');
-Route::get('pertanyaan/datatables',array(
-    'uses'  =>  'PertanyaanController@getDatatables',
-    'as'    =>  'pertanyaan.datatables'
-));
-Route::resource('pertanyaan','PertanyaanController');
-Route::resource('user','UserController');
+    Route::get('jenis_pertanyaan/datatables', array(
+        'uses' => 'JenisPTController@getDatatables',
+        'as' => 'jenis_pertanyaan.datatables'
+    ));
+    Route::resource('jenis_pertanyaan', 'JenisPTController');
+    Route::get('pertanyaan/datatables', array(
+        'uses' => 'PertanyaanController@getDatatables',
+        'as' => 'pertanyaan.datatables'
+    ));
+    Route::resource('pertanyaan', 'PertanyaanController');
+    Route::resource('user', 'UserController');
+});
