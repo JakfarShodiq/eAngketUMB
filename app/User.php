@@ -25,6 +25,7 @@ class User extends Authenticatable
         'phone',
         'gender',
         'birth_date',
+        'join_date',
         'education',
         'birth_place',
         'education',
@@ -43,4 +44,5 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo('App\Roles');
     }
+
 }

@@ -48,4 +48,14 @@ Route::group(['middleware' => 'auth'], function () {
     ));
     Route::resource('pertanyaan', 'PertanyaanController');
     Route::resource('user', 'UserController');
+    Route::get('matakuliah/datatables', array(
+        'uses' => 'MatakuliahController@getDatatables',
+        'as' => 'matakuliah.datatables'
+    ));
+    Route::resource('matakuliah', 'MatakuliahController');
+    Route::get('jadwal/datatables', array(
+        'uses' => 'JadwalController@getDatatables',
+        'as' => 'jadwal.datatables'
+    ));
+    Route::resource('jadwal', 'JadwalController');
 });

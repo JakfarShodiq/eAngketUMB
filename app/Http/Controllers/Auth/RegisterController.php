@@ -74,6 +74,7 @@ class RegisterController extends Controller
             'gender'    =>  $data['gender'],
             'birth_place'   =>  $data['birth_place'],
             'birth_date'    =>  $data['birth_date'],
+            'join_date' =>  date('Y-m-d')
         ]);
     }
 }

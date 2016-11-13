@@ -27,9 +27,12 @@
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{ URL::asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins\select2\select2.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\dataTables.bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.dataTables.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ URL::asset('plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.dataTables.min.css') }}">
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js') }}"></script>
@@ -39,6 +42,7 @@
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <script src="{{ URL::asset('plugins\jQuery\jquery-1.12.3.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
+    <script src="{{ URL::asset('plugins\select2\select2.full.min.js') }}"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <!-- Datatables -->
     <script src="{{ URL::asset('plugins\datatables\jquery.dataTables.min.js') }}"></script>
@@ -111,7 +115,8 @@
                                     <li><!-- start message -->
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::asset('dist/img/user2-160x160.jpg')}}" class="img-circle"
+                                                <img src="{{ URL::asset('dist/img/user2-160x160.jpg')}}"
+                                                     class="img-circle"
                                                      alt="User Image">
                                             </div>
                                             <h4>
@@ -125,7 +130,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::asset('dist/img/user3-128x128.jpg') }}" class="img-circle"
+                                                <img src="{{ URL::asset('dist/img/user3-128x128.jpg') }}"
+                                                     class="img-circle"
                                                      alt="User Image">
                                             </div>
                                             <h4>
@@ -138,7 +144,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::asset('dist/img/user4-128x128.jpg') }}" class="img-circle"
+                                                <img src="{{ URL::asset('dist/img/user4-128x128.jpg') }}"
+                                                     class="img-circle"
                                                      alt="User Image">
                                             </div>
                                             <h4>
@@ -151,7 +158,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::asset('dist/img/user3-128x128.jpg') }}" class="img-circle"
+                                                <img src="{{ URL::asset('dist/img/user3-128x128.jpg') }}"
+                                                     class="img-circle"
                                                      alt="User Image">
                                             </div>
                                             <h4>
@@ -164,7 +172,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::asset('dist/img/user4-128x128.jpg') }}" class="img-circle"
+                                                <img src="{{ URL::asset('dist/img/user4-128x128.jpg') }}"
+                                                     class="img-circle"
                                                      alt="User Image">
                                             </div>
                                             <h4>
@@ -364,15 +373,15 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('categories') ? 'active' : '' }}"><a
-                                    href="{{ route('categories.index') }}"><i class="fa fa-circle-o"></i>Kategori
+                                    href="{{ route('categories.index') }}"><i class="fa fa-tag"></i>Kategori
                                 Pelayanan</a></li>
                         <li class="{{ Request::is('kelas') ? 'active' : '' }}"><a href="{{ route('kelas.index') }}"><i
-                                        class="fa fa-circle-o"></i>Jenis Kelas</a></li>
+                                        class="fa fa-university"></i>Jenis Kelas</a></li>
                         <li class="{{ Request::is('jenis_pertanyaan') ? 'active' : '' }}"><a
-                                    href="{{ route('jenis_pertanyaan.index') }}"><i class="fa fa-circle-o"></i>Kategori
+                                    href="{{ route('jenis_pertanyaan.index') }}"><i class="fa fa-external-link"></i>Kategori
                                 Pertanyaan</a></li>
                         <li class="{{ Request::is('pertanyaan') ? 'active' : '' }}"><a
-                                    href="{{ route('pertanyaan.index') }}"><i class="fa fa-circle-o"></i>Master
+                                    href="{{ route('pertanyaan.index') }}"><i class="fa fa-edit"></i>Master
                                 Pertanyaan</a></li>
                     </ul>
                 </li>
@@ -381,6 +390,18 @@
                         <i class="fa fa-user"></i> <span>Profile</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
+                </li>
+                <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
+                    <a href="/">
+                        <i class="fa fa-file-text"></i> <span>Jadwal</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('matakuliah') ? 'active' : '' }}"><a
+                                    href="{{ route('matakuliah.index') }}"><i class="fa fa-calendar-times-o"></i>Mata Kuliah</a></li>
+                        <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
+                                    href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal Mata Kuliah</a></li>
+                    </ul>
                 </li>
                 <li class="header">LABELS</li>
                 <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
