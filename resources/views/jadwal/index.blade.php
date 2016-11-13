@@ -72,7 +72,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
-                                    <button type="submit" id="btn-add" name="btn-add" class="btn btn-success">
+                                    <button id="btn-add" name="btn-add" class="btn btn-success">
                                         Tambahkan
                                     </button>
                                 </div>
@@ -131,20 +131,24 @@
         ]
         });
         $('#btn-add').click(function () {
-            var name = $('#name').val();
-            var sks = $('#sks').val();
-            var semester = $('#semester').val();
-            var kelas = $('#kelas').val();
-
+            event.preventDefault();
+            var matkul = $('#matkul').val();
+            var tahun_ajaran = $('#tahun_ajaran').val();
+            var dosen = $('#dosen').val();
+            var ruang = $('#ruang').val();
+            var hari = $('#hari').val();
+            var qty = $('#qty').val();
             $.ajax({
                 url: "{{ URL::Route('jadwal.store') }}",
                 type: "post",
                 data: {
                     _token: "<?php echo csrf_token(); ?>",
-                    'name': name,
-                    'sks': sks,
-                    'semester': semester,
-                    'kelas': kelas
+                    'matkul': matkul,
+                    'tahun_ajaran': tahun_ajaran,
+                    'dosen': dosen,
+                    'ruang': ruang,
+                    'hari': hari,
+                    'qty': qty
                 },
                 success: function (result) {
                     alert(result.message);

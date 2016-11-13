@@ -56,6 +56,11 @@ class JadwalController extends Controller
     public function store(Request $request)
     {
         //
+        return response()->json([
+            'success'   =>  true,
+            'message'   =>  'Record Successfully Inserted !',
+            'result'    => $request
+        ],200);
     }
 
     /**
