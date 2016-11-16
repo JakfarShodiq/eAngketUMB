@@ -33,7 +33,10 @@
           href="{{ URL::asset('plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css') }}">
     <link rel="stylesheet"
           href="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.dataTables.min.css') }}">
-
+    <link rel="stylesheet" href="{{ URL::asset('plugins/timepicker/bootstrap-timepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins/daterangepicker/daterangepicker.css') }}">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="{{ URL::asset('plugins/datepicker/datepicker3.css') }}">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js') }}"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js') }}"></script>
@@ -76,9 +79,17 @@
     <!-- AdminLTE App -->
     <script src="{{ URL::asset('dist/js/app.min.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ URL::asset('dist/js/pages/dashboard.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ URL::asset('dist/js/demo.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+    <script src="{{ URL::asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <!-- bootstrap datepicker -->
+    <script src="{{ URL::asset('plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+    <!-- bootstrap color picker -->
+    <script src="{{ URL::asset('plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+    <!-- bootstrap time picker -->
+    <script src="{{ URL::asset('plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -401,6 +412,8 @@
                                     href="{{ route('matakuliah.index') }}"><i class="fa fa-calendar-times-o"></i>Mata Kuliah</a></li>
                         <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
                                     href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal Mata Kuliah</a></li>
+                        <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
+                                    href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll Jadwal</a></li>
                     </ul>
                 </li>
                 <li class="header">LABELS</li>

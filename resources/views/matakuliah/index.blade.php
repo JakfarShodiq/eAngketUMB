@@ -20,7 +20,7 @@
                 <div class="box box-primary">
                     <div class="box-header">
                         @if (session('status'))
-                            <div class="alert alert-success">
+                            <div class="alert alert-info alert-dismissible">
                                 {{ session('status') }}
                             </div>
                         @endif

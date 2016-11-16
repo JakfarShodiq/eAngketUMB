@@ -140,8 +140,8 @@ class MatakuliahController extends Controller
                 $delete .= '</form>';
                 return $edit . $delete;
             })
+            ->editColumn('id', 'ID: {{$id}}')
             ->make(true);
-
         return $datatables;
     }
 }

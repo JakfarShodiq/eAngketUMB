@@ -20,40 +20,69 @@
                 <div class="box box-primary">
                     <div class="box-header">
                         @if (session('status'))
-                            <div class="alert alert-success">
+                            <div class="alert alert-info alert-dismissible">
                                 {{ session('status') }}
                             </div>
                         @endif
                     </div>
                     <div class="box-body">
                         <form class="form-horizontal" role="form" method="POST" action="{{ route('jadwal.update',$model->id) }}">
-                            {{ csrf_field() }}
-                            {{ method_field('PUT') }}
+                        {{ csrf_field() }}
+                        {{ method_field('PUT') }}
                             <div class="form-group">
-                                <label for="name" class="col-md-4 control-label">Nama Mata Kuliah</label>
-                                <div class="col-md-6">
-                                    {{ Form::text('name',$model->name,array('class'   => 'form-control','id'  =>  'name'))  }}
+                                <label for="name" class="col-md-4 control-label">Tahun Ajaran</label>
+                                <div class="col-xs-3">
+                                    {{ Form::text('tahun_ajaran',$model->tahun_ajaran,array('class'   => 'form-control','id'  =>  'tahun_ajaran'))  }}
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="roles">Jumlah SKS</label>
+                                <label class="col-md-4 control-label" for="roles">Mata Kuliah</label>
                                 <div class="col-md-4">
-                                    {{ Form::number('sks', $model->sks,['id'   =>  'sks','min'    =>  0]) }}
+                                    {{ Form::select('matkul',$matkul,$model->id_matkul,['id'   =>  'matkul','class'   =>  'form-control select2'])}}
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="roles">Kelas</label>
+                                <label class="col-md-4 control-label" for="roles">Mata Kuliah</label>
                                 <div class="col-md-4">
-                                            {{ Form::select('kelas',$kelas,$model->id_kelas,['id'   =>  'kelas','class'   =>  'form-control select2'])}}
+                                    {{ Form::select('dosen',$dosen,$model->id_dosen,['id'   =>  'dosen','class'   =>  'form-control select2'])}}
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="roles">Semester</label>
-                                <div class="col-md-4">
-                                    {{ Form::select('semester',['Ganjil'  =>  'Ganjil','Genap'  =>  'Genap'],$model->semester,['id'   =>  'semester','class'   =>  'form-control select2'])}}
+                                <label for="name" class="col-md-4 control-label">Ruang</label>
+                                <div class="col-xs-1">
+                                    {{ Form::text('ruang',$model->ruang,array('class'   => 'form-control','id'  =>  'ruang'))  }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="time_start" class="col-md-4 control-label">Waktu Mulai</label>
+                                <div class="col-xs-1 bootstrap-timepicker">
+                                    {{ Form::text('time_start',$model->time_start,array('class'   => 'form-control','id'  =>  'time_start'))  }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="time_end" class="col-md-4 control-label">Waktu Selesai</label>
+                                <div class="col-xs-1 bootstrap-timepicker">
+                                    {{ Form::text('time_end',$model->time_end,array('class'   => 'form-control','id'  =>  'time_end'))  }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="hari" class="col-md-4 control-label">Hari</label>
+                                <div class="col-md-3">
+                                    {{ Form::select('hari',$day,$model->hari,['id'    => 'hari','class'   =>  'form-control select2']) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="roles">Quota</label>
+                                <div class="col-xs-1">
+                                    {{ Form::number('qty', $model->qty,['id'   =>  'qty','min'    =>  0]) }}
                                 </div>
                             </div>
 
@@ -72,4 +101,22 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('select').select2();
+
+            $('#time_start').timepicker({
+                showInputs: false,
+                showMeridian: false
+            });
+            $('#time_end').timepicker({
+                showInputs: false,
+                showMeridian: false
+            });
+
+        })
+    </script>
 @endsection
