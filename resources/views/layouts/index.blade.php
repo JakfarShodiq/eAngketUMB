@@ -416,6 +416,14 @@
                                     href="{{ route('jadwal-mhs.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll Jadwal</a></li>
                     </ul>
                 </li>
+
+                <li class="{{ Request::is('angket') ? 'active' : '' }}">
+                    <a href="{{ route('angket.index') }}">
+                        <i class="fa fa-user"></i> <span>Angket</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                </li>
+
                 <li class="header">LABELS</li>
                 <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
                 <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>

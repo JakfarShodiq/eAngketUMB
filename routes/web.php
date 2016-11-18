@@ -80,4 +80,13 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'jadwal_mhs_enroll.datatables'
     ));
     Route::resource('jadwal-mhs', 'JadwalMhsController');
+    Route::get('angket/datatables', array(
+        'uses' => 'AngketsController@getMhsDatatable',
+        'as' => 'angket.datatables'
+    ));
+    Route::get('angket/jadwal/{id}',[
+       'uses'   =>  'AngketsController@jadwal',
+        'as'    =>  'angket.jadwal'
+    ]);
+    Route::resource('angket', 'AngketsController');
 });
