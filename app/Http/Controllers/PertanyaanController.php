@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Categories;
 use App\JenisPt;
 use App\Kelas;
+use App\KelasCategories;
 use App\Pertanyaan;
 use App\User;
 use Illuminate\Http\Request;
@@ -25,8 +26,9 @@ class PertanyaanController extends Controller
         $kelas = Kelas::all()->pluck('name', 'id');
         $categories = Kelas::first()->category->pluck('name', 'id');
         $first_class = Kelas::first()->id;
-        $jenispt = JenisPt::where('kelas_category', '=', $first_class)->pluck('name', 'id');
-//        return $categories;
+//        $jenispt = KelasCategories::where('id_kelas', '=', $first_class)->pluck('id');
+        $kelas_categories = KelasCategories::where('id_kelas', '=', $first_class)->pluck('id');
+        $jenispt = JenisPt::whereIn('kelas_category',$kelas_categories)->pluck('name','id');
         return view('pertanyaan.index')->with('kelas', $kelas)
             ->with('categories', $categories)
             ->with('jenispt', $jenispt);

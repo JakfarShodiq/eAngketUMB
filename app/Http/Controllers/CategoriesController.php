@@ -186,4 +186,9 @@ class CategoriesController extends Controller
 
         return $datatables;
     }
+
+    public function getJenisPT($id){
+        $model = Categories::find($id)->jenispt;
+        return $model;
+    }
 }

@@ -17,4 +17,12 @@ class Kelas extends Model
     public function jenispt(){
         return $this->hasMany('App\JenisPt','kelas_category');
     }
+
+    public function jenispt2(){
+        return $this->hasManyThrough('\App\JenisPt','\App\KelasCategories','id_kelas','kelas_category','id');
+    }
+
+    public function kelas_categories(){
+        return $this->hasMany('\App\KelasCategories','id_kelas');
+    }
 }

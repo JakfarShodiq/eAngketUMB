@@ -60,6 +60,7 @@ class JenisPTController extends Controller
         $categories = $request['categories'];
         $kelas_category = KelasCategories::where('id_kelas','=',$kelas)->where('id_category','=',$categories)->first();
 //        return $kelas_category;
+        return $kelas_category;
         $model = new JenisPt();
         $model->name = $name;
         $model->kelas_category = $kelas_category['id'];

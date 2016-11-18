@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="jenispt" class="col-md-4 control-label">Pilih Jenis Kelas</label>
+                                <label for="jenispt" class="col-md-4 control-label">Pilih Jenis Pertanyaan</label>
                                 <div class="col-md-6">
                                     {{ Form::select('jenispt',$jenispt,'',array('id'   =>  'jenispt','class'   =>  'form-control select2')) }}
                                 </div>
@@ -126,17 +126,39 @@
             ]
         });
 
+        function generate_categories() {
+            var kelas = $('#kelas').val();
+            var categories = $('#categories').val();
+            $.ajax({
+                url: "{{ route('kelas.categories.jenispt') }}",
+                type: "get",
+                data: {
+                    _token: "<?php echo csrf_token(); ?>",
+                    kelas: kelas,
+                    categories: categories
+                },
+                success: function (result) {
+                    $('#jenispt').empty();
+                    $('#jenispt').html(result.select_jenispt);
+                }
+            });
+        }
+
         $('#kelas').change(function () {
             var kelas = $('#kelas').val();
             $.get('kelas/category/' + kelas, function (data) {
                 console.log(data);
                 $('#categories').empty();
                 $('#categories').html(data.select_categories);
-                $('#jenispt').empty();
-                $('#jenispt').html(data.select_jenispt);
+                generate_categories();
+//                $('#jenispt').empty();
+//                $('#jenispt').html(data.select_jenispt);
             })
         });
 
+        $('#categories').change(function () {
+            generate_categories();
+        });
         $('#btn-add').click(function () {
             var kelas = $('#kelas').val();
             var categories = $('#categories').val();
@@ -156,9 +178,10 @@
                     'status': status
                 },
                 success: function (result) {
-                    console.log(result.message);
-                    console.log(result.request);
+                    console.log(result.messages);
+                    alert(result.messages);
                     table.ajax.reload();
+                    $('.form-horizontal').reset();
                 }
             });
             return false;

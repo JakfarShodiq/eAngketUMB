@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Categories;
+use App\JenisPt;
 use App\Kelas;
 use App\KelasCategories;
 use Illuminate\Http\Request;
@@ -190,9 +191,21 @@ class KelasController extends Controller
     public function kelas_categories($id)
     {
         $kelas = Kelas::findOrFail($id);
+        $kelas_category = $kelas->category;
         $jenispt = [];
         $list_categories = [];
-        foreach ($kelas->category as $kelass) {
+
+//        return $kelas_category;
+
+        $select_categories = '<select id="categories" name="categories" class="form-control select2">';
+        foreach ($kelas_category as $kc){
+            $select_categories .= "<option value='$kc->id'>$kc->name</option>";;
+        }
+        $select_categories .= '</select>';
+
+//        return $select_categories;
+        /*
+         * foreach ($kelas->category as $kelass) {
             $list_categories[] = [$kelass->id => $kelass->name];
         }
         foreach ($kelas->jenispt as $jenis_pt) {
@@ -207,17 +220,45 @@ class KelasController extends Controller
             }
         }
         $select_categories .= '</select>';
-        $select_jenispt = '<select id="categories" name="categories" class="form-control select2">';
+        $select_jenispt = '<select id="jenispt" name="jenispt" class="form-control select2">';
         foreach ($jenispt as $list_jenispt) {
             foreach ($list_jenispt as $key => $value) {
                 $select_jenispt .= "<option value='$key'>$value</option>";
             }
         }
         $select_jenispt .= '</select>';
-//        return $select;
+        */
+
         return response()
-            ->json(['select_categories' => $select_categories
-                , 'select_jenispt' => $select_jenispt
-            ], 200);
+            ->json(['select_categories' => $select_categories], 200);
+    }
+
+    public function getJenisPt($id){
+        $model = Kelas::find($id)->jenispt2;
+        return $model;
+    }
+
+    public function getJenisPTCat(Request $request){
+        $kelas = $request['kelas'];
+        $categories = $request['categories'];
+
+        $kelas = Kelas::find($kelas);
+        $kelas_categories = $kelas->kelas_categories;
+//        return $kelas_categories;
+        $kc_array = [];
+        foreach ($kelas_categories as $kc){
+            $kc_array[] = $kc->id;
+        }
+
+        $jenispt = JenisPt::whereIn('kelas_category',$kc_array)->get();
+
+        $select_jenispt = '<select id="jenispt" name="jenispt" class="form-control select2">';
+        foreach ($jenispt as $jp){
+            $select_jenispt .= "<option value='$jp->id'>$jp->name</option>";
+        }
+        $select_jenispt .= '</select>';
+
+        return response()
+            ->json(['select_jenispt' => $select_jenispt], 200);
     }
 }

@@ -26,10 +26,22 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'CategoriesController@getDatatables',
         'as' => 'categories.datatables'
     ));
+    Route::get('categories/jenispt/{id}', [
+        'uses' => 'CategoriesController@getJenisPT',
+        'as' => 'categories.jenispt'
+    ]);
     Route::resource('categories', 'CategoriesController');
     Route::get('kelas/category/{id}', [
         'uses' => 'KelasController@kelas_categories',
         'as' => 'kelas.category'
+    ]);
+    Route::get('kelas/categories/jenispt',[
+        'as'    => 'kelas.categories.jenispt',
+        'uses'  =>  'KelasController@getJenisPTCat'
+    ]);
+    Route::get('kelas/jenispt/{id}', [
+        'uses' => 'KelasController@getJenisPt',
+        'as' => 'kelas.jenispt'
     ]);
     Route::get('kelas/datatables', array(
         'uses' => 'KelasController@getDatatables',

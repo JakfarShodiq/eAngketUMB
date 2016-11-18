@@ -31,7 +31,7 @@ class Categories extends Model
     }
 
     public function jenispt(){
-        return $this->hasMany('App\JenisPt','kelas_category','id');
+            return $this->hasManyThrough('\App\JenisPt','\App\KelasCategories','id_category','kelas_category','id');
     }
 
     public function roles(){

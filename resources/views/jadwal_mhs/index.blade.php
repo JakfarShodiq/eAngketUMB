@@ -192,12 +192,5 @@
             })
         });
 
-        /*var oTable = $('#calltable').dataTable();
-        var rowcollection =  oTable.$(".call-checkbox:checked", {"page": "all"});
-        rowcollection.each(function(index,elem){
-            var checkbox_value = $(elem).val();
-            //Do something with 'checkbox_value'
-        });*/
-
     </script>
 @endsection
