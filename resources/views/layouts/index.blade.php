@@ -412,8 +412,8 @@
                                     href="{{ route('matakuliah.index') }}"><i class="fa fa-calendar-times-o"></i>Mata Kuliah</a></li>
                         <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
                                     href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal Mata Kuliah</a></li>
-                        <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
-                                    href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll Jadwal</a></li>
+                        <li class="{{ Request::is('jadwal-mhs') ? 'active' : '' }}"><a
+                                    href="{{ route('jadwal-mhs.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll Jadwal</a></li>
                     </ul>
                 </li>
                 <li class="header">LABELS</li>
