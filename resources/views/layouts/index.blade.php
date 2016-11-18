@@ -404,7 +404,7 @@
                 </li>
                 <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
                     <a href="/">
-                        <i class="fa fa-file-text"></i> <span>Jadwal</span>
+                        <i class="fa fa-list-alt"></i> <span>Jadwal</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
@@ -419,7 +419,7 @@
 
                 <li class="{{ Request::is('angket') ? 'active' : '' }}">
                     <a href="{{ route('angket.index') }}">
-                        <i class="fa fa-user"></i> <span>Angket</span>
+                        <i class="fa fa-list-ol"></i> <span>Angket</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                 </li>
