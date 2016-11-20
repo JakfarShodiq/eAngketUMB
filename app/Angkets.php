@@ -12,4 +12,8 @@ class Angkets extends Model
     protected $dates = ['deleted_at'];
     protected $table = 'angkets';
     protected $fillable = ['id_jadwal_mhs','id_mhs','state','periode'];
+
+    public function returnID(){
+        return $this->id;
+    }
 }

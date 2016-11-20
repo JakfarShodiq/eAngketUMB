@@ -8,10 +8,7 @@
 ?>
 @extends('layouts.index')
 @section('header')
-    Isi Angket : {{ $matkul->matkul }}
-@endsection
-@section('submenu')
-    {{ Auth::user()->identity_number }}
+    Data Angket : {{ $matkul->matkul }}
 @endsection
 @section('content')
     <div class="container">
@@ -19,18 +16,23 @@
             <div class="col-md-12 col-md-offset-0">
                 <div class="box box-primary">
                     <div class="box-header">
-                        @if (session('status'))
-                            <div class="alert alert-info alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert"
-                                        aria-hidden="true">&times;</button>
-                                {{ session('status') }}
-                            </div>
-                        @endif
+                        <table class="table table-bordered">
+                            <tr>
+                                <th colspan="2">Data Responden</th>
+                            </tr>
+                            <tr>
+                                <td>Nama</td>
+                                <td>{{ $user->name }}</td>
+                            <tr>
+                            <tr>
+                                <td>NIM</td>
+                                <td>{{ $user->identity_number }}</td>
+                            <tr>
+                        </table>
                     </div>
                     <div class="box-body">
                         <form method="post" action="{{ route('angket.store') }}">
                             {{ csrf_field() }}
-                            {{ Form::hidden('id',$id->id) }}
                             <div class="row">
                                 <div class="col-md-12">
                                     @foreach($jenispt as $jenispts)
@@ -43,8 +45,8 @@
                                                     </div>
                                                     <div class="col-xs-6">
                                                         <input name="{{ $pertanyaans->id }}" id="{{ $pertanyaans->id }}"
-                                                               class="rating rating-loading" value="3" data-min="0"
-                                                               data-step="1" data-max="5" data-size="xs">
+                                                               class="rating rating-loading display-rating-tok"
+                                                               value="{{ $pertanyaans->rate }}" data-size="xs">
                                                     </div>
                                                 </div>
                                             @endif
@@ -59,7 +61,7 @@
                                         <h3>
                                             Komentar mengenai mata kuliah
                                         </h3>
-                                        {{ Form::textarea('note','',['id'   =>  'note','class'  =>  'form-control']) }}
+                                        {{ Form::textarea('note',$note,['disabled','id'   =>  'note','class'  =>  'form-control']) }}
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
@@ -72,7 +74,6 @@
                                 <div class="col-xs-6"></div>
                                 <div class="col-xs-3">
                                     <div class="row">
-                                        <input type="submit" class="btn btn-success" value="Submit Angket">
                                         <a href="{{ url()->previous() }}" class="btn btn-default">Back</a>
                                     </div>
                                 </div>
@@ -88,4 +89,9 @@
     </div>
 @endsection
 @section('script')
+    <script type="text/javascript">
+        $(document).ready(function () {
+        });
+        $(".display-rating-tok").rating({displayOnly: true, step: 0.5});
+    </script>
 @endsection

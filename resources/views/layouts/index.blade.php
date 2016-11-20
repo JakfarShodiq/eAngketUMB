@@ -7,6 +7,8 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="{{ URL::asset('bootstrap/css/bootstrap.min.css') }}">
+    <!-- Star RATING -->
+    <link rel="stylesheet" href="{{ URL::asset('star-rating\star-rating.min.css') }}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -89,10 +91,12 @@
     <script src="{{ URL::asset('plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
     <!-- bootstrap time picker -->
     <script src="{{ URL::asset('plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <!-- Star Rating -->
+    <script src="{{ URL::asset('star-rating\star-rating.min.js') }}"></script>
 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
 
     <header class="main-header">

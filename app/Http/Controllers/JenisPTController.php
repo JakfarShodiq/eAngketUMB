@@ -21,15 +21,15 @@ class JenisPTController extends Controller
     {
         //
         $kelas = Kelas::all()->pluck('name', 'id');
-        $categories = Kelas::first()->category->pluck('name','id')->toArray();
+        $categories = Kelas::first()->category->pluck('name', 'id')->toArray();
         $category = [];
-        foreach ($categories as $cats){
+        foreach ($categories as $cats) {
             $category[] = $cats;
         }
 //        return $categories;
         return view('jenis_pertanyaan.index')
             ->with('kelas', $kelas)
-            ->with('categories',$categories);
+            ->with('categories', $categories);
     }
 
     /**
@@ -58,22 +58,20 @@ class JenisPTController extends Controller
         $kelas = $request['kelas'];
         $name = $request['name'];
         $categories = $request['categories'];
-        $kelas_category = KelasCategories::where('id_kelas','=',$kelas)->where('id_category','=',$categories)->first();
+        $kelas_category = KelasCategories::where('id_kelas', '=', $kelas)->where('id_category', '=', $categories)->first();
 //        return $kelas_category;
-        return $kelas_category;
+//        return $kelas_category;
         $model = new JenisPt();
         $model->name = $name;
         $model->kelas_category = $kelas_category['id'];
 
-        if($model->save())
-        {
+        if ($model->save()) {
             return response()->json([
                 'message' => '1 record inserted',
                 'sukses' => true,
                 'request' => $request
             ], 200);
-        }
-        else
+        } else
             return response()->json([
                 'message' => 'Insert Failed',
                 'sukses' => false,
@@ -105,16 +103,16 @@ class JenisPTController extends Controller
         $model = JenisPt::find($id);
         $kelas_category = KelasCategories::find($model->kelas_category);
         $kelas = Kelas::all()->pluck('name', 'id');
-        $categories = Kelas::first()->category->pluck('name','id')->toArray();
+        $categories = Kelas::first()->category->pluck('name', 'id')->toArray();
         $category = [];
-        foreach ($categories as $cats){
+        foreach ($categories as $cats) {
             $category[] = $cats;
         }
 
-        return view('jenis_pertanyaan.edit')->with('model',$model)
-            ->with('select',$kelas_category)
-            ->with('kelas',$kelas)
-            ->with('categories',$category);
+        return view('jenis_pertanyaan.edit')->with('model', $model)
+            ->with('select', $kelas_category)
+            ->with('kelas', $kelas)
+            ->with('categories', $category);
     }
 
     /**
@@ -152,10 +150,11 @@ class JenisPTController extends Controller
 
     public function getDatatables()
     {
-        $data = JenisPt::join('kelas_categories','kelas_categories.id','=','jenis_pt.kelas_category')
-            ->join('categories','kelas_categories.id_category','=','categories.id')
-            ->join('kelas','kelas_categories.id_kelas','=','kelas.id')
-            ->select(['jenis_pt.id as id', 'jenis_pt.name as jenispt_name', 'categories.name as categories_name','kelas.name as kelas_name']);
+        $data = JenisPt::join('kelas_categories', 'kelas_categories.id', '=', 'jenis_pt.kelas_category')
+            ->join('categories', 'kelas_categories.id_category', '=', 'categories.id')
+            ->join('kelas', 'kelas_categories.id_kelas', '=', 'kelas.id')
+            ->select(['jenis_pt.id as id', 'jenis_pt.name as jenispt_name', 'categories.name as categories_name', 'kelas.name as kelas_name', 'jenis_pt.created_at as created']);
+//            ->orderBy('created');
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {

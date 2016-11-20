@@ -8,7 +8,7 @@
 ?>
 @extends('layouts.index')
 @section('header')
-    Jadwal
+    Angket
 @endsection
 @section('submenu')
     {{ Auth::user()->identity_number }}

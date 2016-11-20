@@ -62,6 +62,7 @@
                                 <th>Jenis Pertanyaan</th>
                                 <th>Kategory Layanan</th>
                                 <th>Kategory Kelas</th>
+                                <th>Created At</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -91,6 +92,7 @@
                 {data: 'jenispt_name', name: 'jenispt_name'},
                 {data: 'categories_name', name: 'categories_name'},
                 {data: 'kelas_name', name: 'kelas_name'},
+                {data: 'created', name: 'created',orderable: true},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });

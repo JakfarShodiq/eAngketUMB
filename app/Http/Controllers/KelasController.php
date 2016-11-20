@@ -243,8 +243,9 @@ class KelasController extends Controller
         $categories = $request['categories'];
 
         $kelas = Kelas::find($kelas);
-        $kelas_categories = $kelas->kelas_categories;
+        $kelas_categories = $kelas->kelas_categories->where('id_category','=',$categories);
 //        return $kelas_categories;
+//        return $kelas_categories->where('id_category','=',$categories);
         $kc_array = [];
         foreach ($kelas_categories as $kc){
             $kc_array[] = $kc->id;
