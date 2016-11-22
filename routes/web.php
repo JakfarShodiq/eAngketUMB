@@ -15,6 +15,10 @@ Route::get('/', function () {
     return redirect()->to('/home');
 });
 Auth::routes();
+Route::get('/register',[
+    'uses'  =>  'Auth\RegisterController@showRegistrationForm',
+    'as'    => 'register'
+]);
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index');
     Route::get('/master/', 'HomeController@master');

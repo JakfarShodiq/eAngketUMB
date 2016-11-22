@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Roles;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -76,5 +77,12 @@ class RegisterController extends Controller
             'birth_date'    =>  $data['birth_date'],
             'join_date' =>  date('Y-m-d')
         ]);
+    }
+
+    public function showRegistrationForm()
+    {
+        $roles = Roles::all()->pluck('name','id');
+        return view('auth.register')
+            ->with('roles',$roles);
     }
 }
