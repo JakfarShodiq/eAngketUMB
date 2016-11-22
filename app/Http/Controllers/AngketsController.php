@@ -102,7 +102,7 @@ class AngketsController extends Controller
             ->join('jadwal','jadwal.id','=','jadwal_mhs.id_jadwal')
             ->join('matakuliah','matakuliah.id','=','jadwal.id_matkul')
             ->select(DB::raw('distinct(matakuliah.name) as matkul'))->first();
-        $pertanyaan = $pertanyaan->select(DB::raw('p.id,jpt.name as jpt,p.text as pertanyaan,ad.rate'))->get();
+        $pertanyaan = $pertanyaan->select(DB::raw('distinct(ad.id_pt),jpt.name as jpt,p.text as pertanyaan,ad.rate'))->get();
 
         return view('angkets.show')
             ->with('user', $user)
