@@ -413,11 +413,14 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('matakuliah') ? 'active' : '' }}"><a
-                                    href="{{ route('matakuliah.index') }}"><i class="fa fa-calendar-times-o"></i>Mata Kuliah</a></li>
+                                    href="{{ route('matakuliah.index') }}"><i class="fa fa-calendar-times-o"></i>Mata
+                                Kuliah</a></li>
                         <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
-                                    href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal Mata Kuliah</a></li>
+                                    href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal Mata
+                                Kuliah</a></li>
                         <li class="{{ Request::is('jadwal-mhs') ? 'active' : '' }}"><a
-                                    href="{{ route('jadwal-mhs.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll Jadwal</a></li>
+                                    href="{{ route('jadwal-mhs.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll
+                                Jadwal</a></li>
                     </ul>
                 </li>
 
@@ -427,6 +430,15 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                 </li>
+
+                @if(Auth::user()->role->name == "Dosen")
+                <li class="{{ Request::is('dosen') ? 'active' : '' }}">
+                    <a href="{{ route('dosen.index') }}">
+                        <i class="fa fa-star-half-empty"></i> <span>Penilaian Dosen</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                </li>
+                @endif
 
                 <li class="header">LABELS</li>
                 <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>

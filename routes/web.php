@@ -93,4 +93,13 @@ Route::group(['middleware' => 'auth'], function () {
         'as'    =>  'angket.jadwal'
     ]);
     Route::resource('angket', 'AngketsController');
+    Route::get('dosen/datatables', array(
+        'uses' => 'DosenController@getDatatables',
+        'as' => 'dosen.datatables'
+    ));
+    Route::post('dosen/nilai',[
+       'uses'   =>  'DosenController@nilai',
+        'as'    =>  'dosen.nilai'
+    ]);
+    Route::resource('dosen', 'DosenController');
 });
