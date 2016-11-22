@@ -12,6 +12,7 @@ use App\Jadwal_Mhs;
 use App\Angkets;
 use Illuminate\Support\Facades\DB;
 use App\Angket_Details;
+use Illuminate\Support\Facades\Log;
 
 class AngketsController extends Controller
 {
@@ -81,26 +82,26 @@ class AngketsController extends Controller
         //
         $angkets = Angkets::find($id);
         $note = $angkets->note;
+//        return $angkets;
         $user = User::find($angkets->id_mhs);
-        $pertanyaan = $angkets
-            ->join('jadwal_mhs', 'jadwal_mhs.id', '=', 'angkets.id_jadwal_mhs')
-            ->join('jadwal as j', 'jadwal_mhs.id_jadwal', '=', 'j.id')
-            ->join('matakuliah as mt', 'j.id_matkul', '=', 'mt.id')
-            ->join('kelas as k', 'k.id', '=', 'mt.id_kelas')
-            ->join('kelas_categories as kc', 'kc.id_kelas', '=', 'k.id')
-            ->join('jenis_pt as jpt', 'jpt.kelas_category', '=', 'kc.id')
-            ->join('categories as c', 'c.id', '=', 'kc.id_category')
-            ->join('pertanyaan as p', 'p.jenis_pt', '=', 'jpt.id')
-            ->join('angket_details as ad', 'ad.id_pt', '=', 'p.id')
-            ->where('jadwal_mhs.id', '=', $angkets->id_jadwal_mhs);
+        $pertanyaan = clone $angkets;
+        $pertanyaan = $pertanyaan
+            ->join('angket_details as ad', 'ad.angket_id', '=', 'angkets.id')
+            ->join('pertanyaan as p', 'ad.id_pt', '=', 'p.id')
+            ->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
+        ->where('angkets.id','=',$angkets->id);
+//        Log::info($pertanyaan->toSql());
 //            ->select(DB::raw('p.id,p.text'));
+//        return $pertanyaan->get();
 
-//        return $pertanyaan->toSql();
         $jenispt = clone $pertanyaan;
         $matkul = clone $pertanyaan;
         $jenispt = $jenispt->select(DB::raw('distinct(jpt.name) as categories'))->orderBy('categories')->get();
-        $matkul = $matkul->select(DB::raw('distinct(mt.name) as matkul'))->first();
 
+        $matkul = $matkul->join('jadwal_mhs','jadwal_mhs.id','=','angkets.id_jadwal_mhs')
+            ->join('jadwal','jadwal.id','=','jadwal_mhs.id_jadwal')
+            ->join('matakuliah','matakuliah.id','=','jadwal.id_matkul')
+            ->select(DB::raw('distinct(matakuliah.name) as matkul'))->first();
         $pertanyaan = $pertanyaan->select(DB::raw('p.id,jpt.name as jpt,p.text as pertanyaan,ad.rate'))->get();
 
         return view('angkets.show')
@@ -216,7 +217,7 @@ class AngketsController extends Controller
         $jenispt = $jenispt->select(DB::raw('distinct(jpt.name) as categories'))->orderBy('categories')->get();
         $matkul = $matkul->select(DB::raw('distinct(mt.name) as matkul'))->first();
 
-        $pertanyaan = $pertanyaan->select(DB::raw('p.id,jpt.name as jpt,p.text as pertanyaan'))->get();
+        $pertanyaan = $pertanyaan->select(DB::raw('distinct(p.id) as id,jpt.name as jpt,p.text as pertanyaan'))->get();
 
         return view('angkets.create')
             ->with('id', $id_angkets)
