@@ -15,9 +15,9 @@ Route::get('/', function () {
     return redirect()->to('/home');
 });
 Auth::routes();
-Route::get('/register',[
-    'uses'  =>  'Auth\RegisterController@showRegistrationForm',
-    'as'    => 'register'
+Route::get('/register', [
+    'uses' => 'Auth\RegisterController@showRegistrationForm',
+    'as' => 'register'
 ]);
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index');
@@ -39,9 +39,9 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'KelasController@kelas_categories',
         'as' => 'kelas.category'
     ]);
-    Route::get('kelas/categories/jenispt',[
-        'as'    => 'kelas.categories.jenispt',
-        'uses'  =>  'KelasController@getJenisPTCat'
+    Route::get('kelas/categories/jenispt', [
+        'as' => 'kelas.categories.jenispt',
+        'uses' => 'KelasController@getJenisPTCat'
     ]);
     Route::get('kelas/jenispt/{id}', [
         'uses' => 'KelasController@getJenisPt',
@@ -88,18 +88,37 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'AngketsController@getMhsDatatable',
         'as' => 'angket.datatables'
     ));
-    Route::get('angket/jadwal/{id}',[
-       'uses'   =>  'AngketsController@jadwal',
-        'as'    =>  'angket.jadwal'
+    Route::get('angket/jadwal/{id}', [
+        'uses' => 'AngketsController@jadwal',
+        'as' => 'angket.jadwal'
     ]);
     Route::resource('angket', 'AngketsController');
     Route::get('dosen/datatables', array(
         'uses' => 'DosenController@getDatatables',
         'as' => 'dosen.datatables'
     ));
-    Route::post('dosen/nilai',[
-       'uses'   =>  'DosenController@nilai',
-        'as'    =>  'dosen.nilai'
+    Route::post('dosen/nilai', [
+        'uses' => 'DosenController@nilai',
+        'as' => 'dosen.nilai'
     ]);
     Route::resource('dosen', 'DosenController');
+    Route::get('report/datatables-general', array(
+        'uses' => 'ReportController@datatables_general',
+        'as' => 'report.datatables-general'
+    ));
+    Route::get('report/datatables-general-detail', array(
+        'uses' => 'ReportController@datatables_general_detail',
+        'as' => 'report.datatables-general-detail'
+    ));
+    Route::get('report/datatables-performance', array(
+        'uses' => 'ReportController@datatables_performance',
+        'as' => 'report.datatables-performance'
+    ));
+    Route::post('report/general-detail',
+        [
+            'uses' => 'ReportController@general_detail',
+            'as' => 'report.general-detail'
+        ]
+    );
+    Route::resource('report', 'ReportController');
 });
