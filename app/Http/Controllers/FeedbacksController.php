@@ -26,6 +26,7 @@ class FeedbacksController extends Controller
     public function create()
     {
         //
+        return 'TEST';
     }
 
     /**

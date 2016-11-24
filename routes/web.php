@@ -102,23 +102,54 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'dosen.nilai'
     ]);
     Route::resource('dosen', 'DosenController');
+    //REPORT ISSUE
     Route::get('report/datatables-general', array(
         'uses' => 'ReportController@datatables_general',
         'as' => 'report.datatables-general'
     ));
-    Route::get('report/datatables-general-detail', array(
-        'uses' => 'ReportController@datatables_general_detail',
-        'as' => 'report.datatables-general-detail'
-    ));
-    Route::get('report/datatables-performance', array(
-        'uses' => 'ReportController@datatables_performance',
-        'as' => 'report.datatables-performance'
-    ));
+    //DISPLAY GENERAL ISSUE
     Route::post('report/general-detail',
         [
             'uses' => 'ReportController@general_detail',
             'as' => 'report.general-detail'
         ]
     );
+    //DISPLAY GENERAL DETAIL ISSUE
+    Route::get('report/datatables-general-detail', array(
+        'uses' => 'ReportController@datatables_general_detail',
+        'as' => 'report.datatables-general-detail'
+    ));
+
+    Route::get('report/perf',[
+       'uses'   =>  'ReportController@index_perf',
+        'as'    =>  'report.perf'
+    ]);
+
+    Route::get('report/datatables-performance', array(
+        'uses' => 'ReportController@datatables_performance',
+        'as' => 'report.datatables-performance'
+    ));
+
+    //DISPLAY GENERAL ISSUE
+    Route::post('report/perf-detail',
+        [
+            'uses' => 'ReportController@performance_detail',
+            'as' => 'report.perf-detail'
+        ]
+    );
+
+    Route::get('report/datatables-perf-detail', array(
+        'uses' => 'ReportController@datatables_performance_detail',
+        'as' => 'report.datatables-perf-detail'
+    ));
+
     Route::resource('report', 'ReportController');
+
+    Route::get('issue/datatables', array(
+        'uses' => 'IssueController@getDatatables',
+        'as' => 'issue.datatables'
+    ));
+    Route::resource('issue', 'IssueController');
+    Route::resource('ticket', 'FeedbacksController');
+    Route::resource('ticket-details', 'FeedbackDetailsController');
 });

@@ -11,7 +11,7 @@
     Laporan Angket
 @endsection
 @section('submenu')
-    Issue General
+    Issue Performa Dosen
 @endsection
 @section('content')
     <div class="container">
@@ -94,7 +94,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url:'{{ route('report.datatables-general') }}',
+                    url:'{{ route('report.datatables-performance') }}',
                     data: function (d) {
                         d.periode = $('#periode').val();
                         d.semester = $('#semester').val();
@@ -123,4 +123,3 @@
         })
     </script>
 @endsection
-

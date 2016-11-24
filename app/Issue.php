@@ -5,21 +5,27 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Feedbacks extends Model
+class Issue extends Model
 {
     //
     use SoftDeletes;
-    protected $table = 'feedbacks';
     protected $fillable = [
         'periode'
-        ,'status'
-        ,'created_by'
-        ,'assigned_to'
+        ,'semester'
+        ,'jenis_pertanyaan'
+        ,'ruang'
+        ,'nama_dosen'
+        ,'matakuliah'
+        ,'pertanyaan'
+        ,'avg_rate'
         ,'created_at'
         ,'updated_at'
         ,'deleted_at'
-        ,'id_issue'
-        ,'note'
     ];
+
     protected $dates = ['deleted_at'];
+
+    public function ticket(){
+        return $this->hasMany('\App\feedbacks','id_issue','id');
+    }
 }

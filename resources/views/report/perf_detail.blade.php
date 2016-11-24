@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: USER
- * Date: 11/23/2016
- * Time: 11:38 PM
+ * Date: 11/24/2016
+ * Time: 1:58 AM
  */
 ?>
 @extends('layouts.index')
@@ -11,7 +11,7 @@
     Laporan Angket
 @endsection
 @section('submenu')
-    Issue General
+    Detail Performa Dosen
 @endsection
 @section('content')
     <div class="container">
@@ -28,43 +28,20 @@
                         @endif
                     </div>
                     <div class="box-body">
-                        <form class="form-horizontal" id="data-filter" role="form" method="POST" action="#">
-                            {{ csrf_field() }}
-                            <div class="form-group">
-                                <label for="periode" class="col-md-4 control-label">Periode</label>
-                                <div class="col-xs-3">
-                                    {{ Form::select('periode',$periode,'',['id'    =>  'periode','class'    =>  'form-control select2']) }}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="semester" class="col-md-4 control-label">Semester</label>
-                                <div class="col-xs-3">
-                                    {{ Form::select('semester',$semester,'',['id'    =>  'semester','class'    =>  'form-control select2']) }}
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
-                                    <button type="submit" id="filter" name="filter" class="btn btn-info">
-                                        Filter
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 col-xs-12">
-                <div class="box box-primary">
-                    <div class="box-body">
+                        {{ Form::hidden('pertanyaan',$pertanyaan,['id'  =>  'pertanyaan']) }}
+                        {{ Form::hidden('semester',$semester,['id'  =>  'semester']) }}
+                        {{ Form::hidden('periode',$periode,['id'  =>  'periode']) }}
+
                         <table class="table table-bordered" id="kelas-table" name="kelas-table">
                             <thead>
                             <tr>
                                 <th>Periode</th>
                                 <th>Semester</th>
                                 <th>Jenis Pertanyaan</th>
+                                <th>Ruang</th>
+                                <th>Nama Dosen</th>
+                                <th>Matakuliah</th>
                                 <th>Pertanyaan</th>
                                 <th>Rate</th>
                                 <th>Action</th>
@@ -94,16 +71,20 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url:'{{ route('report.datatables-general') }}',
-                    data: function (d) {
-                        d.periode = $('#periode').val();
-                        d.semester = $('#semester').val();
+                    url: '{{ route('report.datatables-perf-detail') }}',
+                    data: {
+                        periode: $('#periode').val(),
+                        semester: $('#semester').val(),
+                        pertanyaan: $('#pertanyaan').val()
                     }
                 },
                 columns: [
                     {data: 'periode', name: 'periode'},
                     {data: 'semester', name: 'semester'},
                     {data: 'jenis_pertanyaan', name: 'jenis_pertanyaan'},
+                    {data: 'ruang', name: 'ruang'},
+                    {data: 'dosen', name: 'dosen'},
+                    {data: 'matkul', name: 'matkul'},
                     {data: 'text', name: 'text'},
                     {data: 'avg_rate', name: 'avg_rate', orderable: true},
                     {data: 'action', name: 'action', orderable: false, searchable: false}
@@ -123,4 +104,3 @@
         })
     </script>
 @endsection
-
