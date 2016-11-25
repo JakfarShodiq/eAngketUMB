@@ -150,6 +150,20 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'issue.datatables'
     ));
     Route::resource('issue', 'IssueController');
+
+    Route::get('ticket/datatables', array(
+        'uses' => 'FeedbacksController@getDatatables',
+        'as' => 'ticket.datatables'
+    ));
+    Route::get('ticket/datatables-detail', array(
+        'uses' => 'FeedbacksController@generateTableDetail',
+        'as' => 'ticket.datatables-detail'
+    ));
+    Route::post('ticket/history', [
+        'uses'  =>  'FeedbacksController@history',
+        'as' => 'ticket.history'
+    ]);
     Route::resource('ticket', 'FeedbacksController');
+
     Route::resource('ticket-details', 'FeedbackDetailsController');
 });

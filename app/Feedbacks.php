@@ -22,4 +22,9 @@ class Feedbacks extends Model
         ,'note'
     ];
     protected $dates = ['deleted_at'];
+
+    public function detail() {
+        return $this->hasMany('\App\Feedback_Details','feedback_id','id');
+    }
+
 }
