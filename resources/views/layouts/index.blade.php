@@ -428,6 +428,7 @@
                     </ul>
                 </li>
 
+                @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','DEKAN']))
                 <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
                     <a href="/">
                         <i class="fa fa-paste "></i> <span>Hasil Angket</span>
@@ -441,6 +442,7 @@
                                     href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a></li>
                     </ul>
                 </li>
+                @endif
 
                 @if(Auth::user()->role->name == "Mahasiswa")
                     <li class="{{ Request::is('angket') ? 'active' : '' }}">
