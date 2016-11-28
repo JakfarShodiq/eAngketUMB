@@ -99,11 +99,15 @@ class FeedbacksController extends Controller
         //
         $ticket = Feedbacks::find($id);
         $ticket_detail = clone $ticket;
+        $issue = clone $ticket;
         $ticket_detail = $ticket->detail();
+        $issue = $issue->issue;
         $status = Status::whereIn('id', [2, 3])->pluck('name', 'id');
         return view('ticket.show')->with('ticket', $ticket)
             ->with('detail', $ticket_detail)
-            ->with('status', $status);
+            ->with('status', $status)
+            ->with('issue',$issue);
+
     }
 
     function generateTableDetail()
@@ -136,10 +140,13 @@ class FeedbacksController extends Controller
     {
         //
         $model = Feedbacks::find($id);
+        $issue = clone $model;
+        $issue = $issue->issue;
         $status = Status::whereIn('id', [1, 4])->pluck('name', 'id');
         return view('ticket.edit')
             ->with('model', $model)
-            ->with('status', $status);
+            ->with('status', $status)
+            ->with('issue',$issue);
     }
 
     /**
@@ -179,11 +186,11 @@ class FeedbacksController extends Controller
     public function getDatatables()
     {
         $data = Feedbacks::join('issues as i', 'feedbacks.id_issue', '=', 'i.id')
-            ->join('roles as r', 'feedbacks.assigned_to', '=', 'r.id');
+            ->join('roles as r', 'feedbacks.assigned_to', '=', 'r.id')
+            ->join('status as s', 's.id', '=', 'feedbacks.status');
         $role = Auth::user()->role;
         if ($role->name != "LPPM") {
             $data = $data->where('feedbacks.assigned_to', '=', $role->id);
-//            Log::info($data->toSql());
         }
 
         $data = $data->select(DB::raw(
@@ -191,8 +198,11 @@ class FeedbacksController extends Controller
                     feedbacks.periode,
                     i.jenis_pertanyaan,
                     i.pertanyaan,
+                    i.nama_dosen,
+                    i.ruang,
+                    i.matakuliah,
                     r.name,
-                    feedbacks.status'
+                    s.name as status'
         ));
 
         $datatables = Datatables::of($data)
@@ -202,9 +212,12 @@ class FeedbacksController extends Controller
                 $finish = Feedback_Details::where('feedback_id', '=', $data->id)
                     ->where('status', '=', 3)
                     ->first();
+                $close = Feedbacks::find($data->id)
+//                    ->where('feedbacks.status','=',4)
+                    ;
                 $user = Auth::user()->role;
 
-                if (!empty($finish)) {
+                if ($close->status == 4) {
                     $button = FormFacade::open([
                         'method' => 'post',
                         'url' => route('ticket.history')
@@ -212,7 +225,17 @@ class FeedbacksController extends Controller
                     $button .= FormFacade::hidden('id', $data->id);
                     $button .= FormFacade::submit('History Ticket', ['class' => 'btn btn-default']);
                     $button .= FormFacade::close();
-                } elseif ($user->name != "LPPM") {
+                }
+                /*elseif (!empty($close)) {
+                    $button = FormFacade::open([
+                        'method' => 'get',
+                        'url' => route('ticket.edit',$data->id)
+                    ]);
+                    $button .= FormFacade::hidden('id', $data->id);
+                    $button .= FormFacade::submit('History Ticket', ['class' => 'btn btn-success']);
+                    $button .= FormFacade::close();
+                }*/
+                elseif ($user->name != "LPPM" and $user->name != "Mahasiswa") {
                     $button = FormFacade::open([
                         'method' => 'get',
                         'url' => route('ticket.show', $data->id)
@@ -226,34 +249,8 @@ class FeedbacksController extends Controller
                     ]);
                     $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-success']);
                     $button .= FormFacade::close();
-                }
-
-                /*
-                 * if (empty($finish) and $detail > 0) {
-                    $button = FormFacade::open([
-                        'method' => 'get',
-                        'url' => route('ticket.show', $data->id)
-                    ]);
-                    $button .= FormFacade::submit('Lihat Ticket', ['class' => 'btn btn-success']);
-                    $button .= FormFacade::close();
-                } elseif (!empty(Feedbacks::find($data->id)->where('status', '=', 4)->first())) {
-                    $button = FormFacade::open([
-                        'method' => 'post',
-                        'url' => route('ticket.history')
-                    ]);
-                    $button .= FormFacade::hidden('id', $data->id);
-                    $button .= FormFacade::submit('Lihat Ticket', ['class' => 'btn btn-success']);
-                    $button .= FormFacade::close();
-                } else {
-                    $button = FormFacade::open([
-                        'method' => 'get',
-                        'url' => route('ticket.edit', $data->id)
-                    ]);
-                    $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-info']);
-                    $button .= FormFacade::close();
-                }
-                */
-
+                } else
+                    $button = '';
                 return $button;
             })
             ->make(true);
@@ -269,7 +266,7 @@ class FeedbacksController extends Controller
         $detail = Feedbacks::find($id)->join('feedback_details as fd', 'feedbacks.id', '=', 'fd.feedback_id')
             ->join('users as u', 'fd.created_by', '=', 'u.id')
             ->join('status as s', 'fd.status', '=', 's.id')
-            ->where('fd.feedback_id','=',$id)
+            ->where('fd.feedback_id', '=', $id)
             ->select(DB::raw('
                 fd.id,
                 u.name as username,

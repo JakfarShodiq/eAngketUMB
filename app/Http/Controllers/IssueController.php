@@ -140,7 +140,7 @@ class IssueController extends Controller
                 {
                     $button = FormFacade::open([
                         'method'  =>  'get',
-                        'url' =>  route('ticket.show',$ticket->id)
+                        'url' =>  route('ticket.edit',$ticket->id)
                     ]);
                     $button .= FormFacade::submit('Lihat Ticket',['class'    =>  'btn btn-success']);
                     $button .= FormFacade::close();

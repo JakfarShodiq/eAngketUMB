@@ -28,6 +28,10 @@ class Feedbacks extends Model
         return $this->hasMany('\App\Feedback_Details','feedback_id');
     }
 
+    public function issue(){
+        return $this->hasOne('\App\Issue','id');
+    }
+
     public function created_time()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at);

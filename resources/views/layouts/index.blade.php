@@ -420,46 +420,62 @@
                         <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
                                     href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal Mata
                                 Kuliah</a></li>
-                        <li class="{{ Request::is('jadwal-mhs') ? 'active' : '' }}"><a
-                                    href="{{ route('jadwal-mhs.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll
-                                Jadwal</a></li>
+                        @if(Auth::user()->role->name == "Mahasiswa")
+                            <li class="{{ Request::is('jadwal-mhs') ? 'active' : '' }}"><a
+                                        href="{{ route('jadwal-mhs.index') }}"><i class="fa fa-calendar-check-o"></i>Enroll
+                                    Jadwal</a></li>
+                        @endif
+                    </ul>
+                </li>
+
+                <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
+                    <a href="/">
+                        <i class="fa fa-paste "></i> <span>Hasil Angket</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('report') ? 'active' : '' }}"><a
+                                    href="{{ route('report.index') }}"><i class="fa fa-building"></i>Fasilitas Umum</a>
+                        </li>
+                        <li class="{{ Request::is('report') ? 'active' : '' }}"><a
+                                    href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a></li>
                     </ul>
                 </li>
 
                 @if(Auth::user()->role->name == "Mahasiswa")
-                <li class="{{ Request::is('angket') ? 'active' : '' }}">
-                    <a href="{{ route('angket.index') }}">
-                        <i class="fa fa-list-ol"></i> <span>Angket</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
-                </li>
+                    <li class="{{ Request::is('angket') ? 'active' : '' }}">
+                        <a href="{{ route('angket.index') }}">
+                            <i class="fa fa-list-ol"></i> <span>Angket</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                    </li>
                 @endif
 
                 @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
-                <li class="{{ Request::is('ticket') ? 'active' : '' }}">
-                    <a href="{{ route('ticket.index') }}">
-                        <i class="fa fa-list-ol"></i> <span>Ticket</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
-                </li>
+                    <li class="{{ Request::is('issue') ? 'active' : '' }}">
+                        <a href="{{ route('issue.index') }}">
+                            <i class="fa fa-stack-overflow"></i> <span>Issue</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                    </li>
                 @endif
 
                 @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
-                <li class="{{ Request::is('issue') ? 'active' : '' }}">
-                    <a href="{{ route('issue.index') }}">
-                        <i class="fa fa-list-ol"></i> <span>Issue</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
-                </li>
+                    <li class="{{ Request::is('ticket') ? 'active' : '' }}">
+                        <a href="{{ route('ticket.index') }}">
+                            <i class="fa fa-ticket"></i> <span>Ticket</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                    </li>
                 @endif
 
                 @if(Auth::user()->role->name == "Dosen")
-                <li class="{{ Request::is('dosen') ? 'active' : '' }}">
-                    <a href="{{ route('dosen.index') }}">
-                        <i class="fa fa-star-half-empty"></i> <span>Penilaian Dosen</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
-                </li>
+                    <li class="{{ Request::is('dosen') ? 'active' : '' }}">
+                        <a href="{{ route('dosen.index') }}">
+                            <i class="fa fa-star-half-empty"></i> <span>Penilaian Dosen</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                    </li>
                 @endif
 
                 <li class="header">LABELS</li>

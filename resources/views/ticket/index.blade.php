@@ -35,6 +35,9 @@
                                 <th>Periode</th>
                                 <th>Jenis Pertanyaan</th>
                                 <th>Pertanyaan</th>
+                                <th>Ruang</th>
+                                <th>Mata Kuliah</th>
+                                <th>Nama Dosen</th>
                                 <th>Penerima</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -79,6 +82,9 @@
                 {data: 'periode', name: 'periode'},
                 {data: 'jenis_pertanyaan', name: 'jenis_pertanyaan'},
                 {data: 'pertanyaan', name: 'pertanyaan'},
+                {data: 'ruang', name: 'ruang'},
+                {data: 'matakuliah', name: 'matakuliah'},
+                {data: 'nama_dosen', name: 'nama_dosen'},
                 {data: 'name', name: 'name'},
                 {data: 'status', name: 'status'},
                 {data: 'action', name: 'action', orderable: false, searchable: false}

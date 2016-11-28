@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Feedback_Details;
+use App\Feedbacks;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -50,6 +51,9 @@ class FeedbackDetailsController extends Controller
         $model->created_by = $created_by;
 
         if($model->save()){
+            $ticket = Feedbacks::find($ticket_id);
+            $ticket->status = $status;
+            $ticket->save();
             return redirect()->route('ticket.index')->with('status','Ticket sudah diupdate');
         }
         else

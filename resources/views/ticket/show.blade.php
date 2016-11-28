@@ -41,6 +41,27 @@
                             </div>
                         </div>
 
+                        @if($issue->jenis_pertanyaan == "Performansi Dosen")
+                            <div class="form-group">
+                                <label for="issue" class="col-md-4 control-label">Ruang</label>
+                                <div class="col-xs-6">
+                                    {{ Form::text('ruang',$issue->ruang,array('class'   => 'form-control','id'  =>  'ruang','readonly'))  }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="issue" class="col-md-4 control-label">Mata Kuliah</label>
+                                <div class="col-xs-6">
+                                    {{ Form::text('matakuliah',$issue->matakuliah,array('class'   => 'form-control','id'  =>  'matakuliah','readonly'))  }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="issue" class="col-md-4 control-label">Nama Dosen</label>
+                                <div class="col-xs-6">
+                                    {{ Form::text('nama_dosen',$issue->nama_dosen,array('class'   => 'form-control','id'  =>  'nama_dosen','readonly'))  }}
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="form-group">
                             <label for="issue" class="col-md-4 control-label">Keluhan</label>
                             <div class="col-xs-6">
