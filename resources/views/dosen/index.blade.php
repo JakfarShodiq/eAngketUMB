@@ -24,7 +24,7 @@
                     </div>
                     <div class="box-body">
 
-                        <table class="table table-bordered" id="kelas-table" name="kelas-table">
+                        <table class="display" cellspacing="0" width="100%" id="kelas-table" name="kelas-table">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -79,7 +79,7 @@
 //            $('select').select2();
             $('#loader').hide();
             $('#content-nilai').hide();
-            var table = $('#kelas-table').DataTable({
+            var table = $('#kelas-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('dosen.datatables') }}',

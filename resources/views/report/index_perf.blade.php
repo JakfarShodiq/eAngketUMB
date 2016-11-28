@@ -59,7 +59,7 @@
             <div class="col-md-12 col-xs-12">
                 <div class="box box-primary">
                     <div class="box-body">
-                        <table class="table table-bordered" id="kelas-table" name="kelas-table">
+                        <table class="display" cellspacing="0" width="100%" id="kelas-table" name="kelas-table">
                             <thead>
                             <tr>
                                 <th>Periode</th>
@@ -87,7 +87,7 @@
                 }
             });
 
-            var table = $('#kelas-table').DataTable({
+            var table = $('#kelas-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
                 dom: "<'row'<'col-xs-12'<'col-xs-6'l><'col-xs-6'p>>r>" +
                 "<'row'<'col-xs-12't>>" +
                 "<'row'<'col-xs-12'<'col-xs-6'i><'col-xs-6'p>>>",

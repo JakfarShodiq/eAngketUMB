@@ -52,7 +52,7 @@
 
                                     </form>
 
-                                    <table class="table table-bordered" id="kelas-table" name="kelas-table">
+                                    <table class="display" cellspacing="0" width="100%" id="kelas-table" name="kelas-table">
                                         <thead>
                                         <tr>
                                             <th>Check</th>
@@ -75,7 +75,7 @@
                                     </div>
                                 </div>
                                 <div class="active tab-pane" id="jadwal-mhs">
-                                    <table class="table table-bordered" id="jadwal-mhs-table" name="jadwal-mhs-table">
+                                    <table class="display" cellspacing="0" width="100%" id="jadwal-mhs-table" name="jadwal-mhs-table">
                                         <thead>
                                         <tr>
                                             <th>Mata Kuliah</th>
@@ -112,7 +112,7 @@
 
             $('select').select2();
         });
-        var mhs_table = $('#jadwal-mhs-table').DataTable({
+        var mhs_table = $('#jadwal-mhs-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
             processing: true,
             serverSide: true,
             ajax: {
@@ -137,7 +137,7 @@
             ]
         });
 
-        var table = $('#kelas-table').DataTable({
+        var table = $('#kelas-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
                     processing: true,
                     serverSide: true,
                     ajax: {

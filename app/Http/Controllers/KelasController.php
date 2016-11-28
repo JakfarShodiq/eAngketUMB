@@ -174,7 +174,7 @@ class KelasController extends Controller
                 $delete .= csrf_field();
                 $delete .= '<button type="submit" id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"> Delete</i></button>';
                 $delete .= '</form>';
-                return $edit . $delete;
+                return $edit.$delete;
             })
 //            ->editColumn('id', 'ID: {{$id}}')
             ->make(true);

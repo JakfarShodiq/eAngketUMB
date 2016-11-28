@@ -65,7 +65,7 @@
                             </div>
                         </form>
 
-                        <table class="table table-bordered" id="kelas-table" name="kelas-table">
+                        <table class="display" cellspacing="0" width="100%" id="kelas-table" name="kelas-table">
                             <thead>
                             <tr>
                                 <th>Mata Kuliah</th>
@@ -94,7 +94,7 @@
             }
         });
 
-        var table = $('#kelas-table').DataTable({
+        var table = $('#kelas-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
             processing: true,
             serverSide: true,
             ajax: '{{ route('matakuliah.datatables') }}',

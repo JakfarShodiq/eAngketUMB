@@ -56,7 +56,7 @@
                             </div>
                         </form>
 
-                        <table class="table table-bordered" id="users-table" name="users-table">
+                        <table class="display" cellspacing="0" width="100%" id="users-table" name="users-table">
                             <thead>
                             <tr>
                                 <th>Jenis Pertanyaan</th>
@@ -84,7 +84,7 @@
             }
         });
 
-        var table = $('#users-table').DataTable({
+        var table = $('#users-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
             processing: true,
             serverSide: true,
             ajax: '{{ route('jenis_pertanyaan.datatables') }}',

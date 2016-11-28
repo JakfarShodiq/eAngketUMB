@@ -28,16 +28,14 @@
     <link rel="stylesheet" href="{{ URL::asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{ URL::asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables.min.1.10.12.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\dataTables.jqueryui.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables.min.1.10.12.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins/timepicker/bootstrap-timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables_themeroller.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\select2\select2.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\dataTables.bootstrap.css') }}">
-    <link rel="stylesheet"
-          href="{{ URL::asset('plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('plugins/timepicker/bootstrap-timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- bootstrap datepicker -->
     <link rel="stylesheet" href="{{ URL::asset('plugins/datepicker/datepicker3.css') }}">

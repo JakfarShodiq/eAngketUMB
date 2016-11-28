@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                         </form>
-                        <table class="table table-bordered" id="categories-table" name="categories-table">
+                        <table class="display" cellspacing="0" width="100%" id="categories-table" name="categories-table">
                             <thead>
                             <tr>
                                 <th>Nama Layanan</th>
@@ -95,7 +95,7 @@
             }
         });
 
-        var table = $('#categories-table').DataTable({
+        var table = $('#categories-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
             rowReorder: {
                 selector: 'td:nth-child(2)'
             },

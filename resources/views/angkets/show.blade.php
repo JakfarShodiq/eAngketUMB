@@ -16,7 +16,7 @@
             <div class="col-md-12 col-md-offset-0">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <table class="table table-bordered">
+                        <table class="display" cellspacing="0" width="100%">
                             <tr>
                                 <th colspan="2">Data Responden</th>
                             </tr>

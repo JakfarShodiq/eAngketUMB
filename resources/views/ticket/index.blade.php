@@ -28,7 +28,7 @@
                         @endif
                     </div>
                     <div class="box-body">
-                        <table class="table table-bordered" id="jadwal-mhs-table" name="jadwal-mhs-table">
+                        <table class="display" cellspacing="0" width="100%" id="jadwal-mhs-table" name="jadwal-mhs-table">
                             <thead>
                             <tr>
                                 <th>No Ticket</th>
@@ -64,7 +64,7 @@
 
             $('select').select2();
         });
-        var mhs_table = $('#jadwal-mhs-table').DataTable({
+        var mhs_table = $('#jadwal-mhs-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
             processing: true,
             serverSide: true,
             ajax: {
