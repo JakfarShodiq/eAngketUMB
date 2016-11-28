@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Issue;
 use Illuminate\Http\Request;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\VarDumper\Cloner\Data;
 use Yajra\Datatables\Facades\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Angkets;
@@ -114,7 +115,6 @@ class ReportController extends Controller
         $semester = $request['semester'];
         $periode = $request['periode'];
 
-//        return $pertanyaan.'<br>'.$semester.'<br>'.$periode;
         return view('report.general_detail')
             ->with('pertanyaan', $pertanyaan)
             ->with('semester', $semester)
@@ -125,37 +125,23 @@ class ReportController extends Controller
     {
         $periode = $request['periode'];
         $semester = $request['semester'];
-        $data = Angkets::join('angket_details as ad', 'angkets.id', '=', 'ad.angket_id')
-            ->join('pertanyaan as p', 'ad.id_pt', '=', 'p.id')
-            ->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
-            ->join('jadwal_mhs as jm', 'jm.id', '=', 'angkets.id_jadwal_mhs')
-            ->join('jadwal as j', 'j.id', '=', 'jm.id_jadwal')
-            ->join('matakuliah as mt', 'mt.id', '=', 'j.id_matkul');
+        $data = DB::table('report_issue_general')
+            ->select(DB::Raw('
+                periode,semester,jenis_pertanyaan,text,round(avg(rate),2) as rate
+            '))
+            ->groupBy(DB::Raw('periode,semester,jenis_pertanyaan,text'));
 
         if (empty($periode) and empty($semester)) {
-            $data = $data->where('jpt.name', '!=', 'Performansi Dosen')
-                ->where('angkets.periode', '=', '2016/2017')
-                ->where('mt.semester', '=', 'Ganjil');
+            $data = $data
+//                ->where('jpt.name', '!=', 'Performansi Dosen')
+                ->where('periode', '=', '2016/2017')
+                ->where('semester', '=', 'Ganjil');
         } else
-            $data = $data->where('jpt.name', '!=', 'Performansi Dosen')
-                ->where('angkets.periode', '=', $periode)
-                ->where('mt.semester', '=', $semester);
+            $data = $data
+                ->where('periode', '=', $periode)
+                ->where('semester', '=', $semester);
 
-        $data = $data->select(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name               AS jenis_pertanyaan,
-              p.text,
-              round(avg(ad.rate), 2) AS avg_rate
-            '))
-            ->groupBy(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name,
-              p.text
-            '))
-            ->orderBy('avg_rate')
-            ->limit(10);
+        $data = $data->orderBy('rate')->limit(10);
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
@@ -179,33 +165,12 @@ class ReportController extends Controller
         $semester = $request['semester'];
         $pertanyaan = $request['pertanyaan'];
 
-        $data = Angkets::join('angket_details as ad', 'angkets.id', '=', 'ad.angket_id')
-            ->join('pertanyaan as p', 'ad.id_pt', '=', 'p.id')
-            ->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
-            ->join('jadwal_mhs as jm', 'jm.id', '=', 'angkets.id_jadwal_mhs')
-            ->join('jadwal as j', 'j.id', '=', 'jm.id_jadwal')
-            ->join('matakuliah as mt', 'mt.id', '=', 'j.id_matkul')
-            ->where('jpt.name', '!=', 'Performansi Dosen')
-            ->where('angkets.periode', '=', $periode)
-            ->where('mt.semester', '=', $semester)
-            ->where('p.text', '=', $pertanyaan);
+        $data = DB::table('report_issue_general')
+            ->where('periode', '=', $periode)
+            ->where('semester', '=', $semester)
+            ->where('text', '=', $pertanyaan);
 
-        $data = $data->select(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name               AS jenis_pertanyaan,
-              j.ruang,
-              p.text,
-              round(avg(ad.rate), 2) AS avg_rate
-            '))
-            ->groupBy(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name,
-              j.ruang,
-              p.text
-            '))
-            ->orderBy('avg_rate');
+        $data = $data->orderBy('rate');
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
@@ -214,7 +179,7 @@ class ReportController extends Controller
                     ->where('jenis_pertanyaan', '=', $data->jenis_pertanyaan)
                     ->where('ruang', '=', $data->ruang)
                     ->where('pertanyaan', '=', $data->text)
-                    ->where('avg_rate', '=', $data->avg_rate)
+                    ->where('avg_rate', '=', $data->rate)
                     ->first();
                 if (empty($issue)) {
                     $detail = "<form action='" . route('issue.store') . "' method='POST'>";
@@ -223,7 +188,7 @@ class ReportController extends Controller
                     $detail .= FormFacade::hidden('periode', $data->periode, []);
                     $detail .= FormFacade::hidden('jenis_pertanyaan', $data->jenis_pertanyaan, []);
                     $detail .= FormFacade::hidden('ruang', $data->ruang, []);
-                    $detail .= FormFacade::hidden('avg_rate', $data->avg_rate, []);
+                    $detail .= FormFacade::hidden('avg_rate', $data->rate, []);
                     $detail .= csrf_field();
                     $detail .= '<button type="submit" id="btn-delete" class="btn btn-info">Assign Issue</button>';
                     $detail .= '</form>';
@@ -248,7 +213,6 @@ class ReportController extends Controller
         $semester = $request['semester'];
         $periode = $request['periode'];
 
-//        return $pertanyaan.'<br>'.$semester.'<br>'.$periode;
         return view('report.perf_detail')
             ->with('pertanyaan', $pertanyaan)
             ->with('semester', $semester)
@@ -260,36 +224,20 @@ class ReportController extends Controller
         $periode = $request['periode'];
         $semester = $request['semester'];
 
-        $data = Angkets::join('angket_details as ad', 'angkets.id', '=', 'ad.angket_id')
-            ->join('pertanyaan as p', 'ad.id_pt', '=', 'p.id')
-            ->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
-            ->join('jadwal_mhs as jm', 'jm.id', '=', 'angkets.id_jadwal_mhs')
-            ->join('jadwal as j', 'j.id', '=', 'jm.id_jadwal')
-            ->join('matakuliah as mt', 'mt.id', '=', 'j.id_matkul');
+        $data = DB::table('report_issue_dosen')
+            ->select(DB::Raw('periode,semester,jenis_pertanyaan,text,round(avg(rate),2) as rate'))
+            ->groupBy(DB::Raw('periode,semester,jenis_pertanyaan,text'));
 
         if (empty($periode) and empty($semester)) {
-            $data = $data->where('jpt.name', '=', 'Performansi Dosen')
-                ->where('angkets.periode', '=', '2016/2017')
-                ->where('mt.semester', '=', 'Ganjil');
+            $data = $data
+                ->where('periode', '=', '2016/2017')
+                ->where('semester', '=', 'Ganjil');
         } else
-            $data = $data->where('jpt.name', '=', 'Performansi Dosen')
-                ->where('angkets.periode', '=', $periode)
-                ->where('mt.semester', '=', $semester);
+            $data = $data
+                ->where('periode', '=', $periode)
+                ->where('semester', '=', $semester);
 
-        $data = $data->select(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name               AS jenis_pertanyaan,
-              p.text,
-              round(avg(ad.rate), 2) AS avg_rate
-            '))
-            ->groupBy(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name,
-              p.text
-            '))
-            ->orderBy('avg_rate');
+        $data = $data->orderBy('rate');
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
@@ -313,49 +261,46 @@ class ReportController extends Controller
         $semester = $request['semester'];
         $pertanyaan = $request['pertanyaan'];
 
-        $data = Angkets::join('angket_details as ad', 'angkets.id', '=', 'ad.angket_id')
-            ->join('pertanyaan as p', 'ad.id_pt', '=', 'p.id')
-            ->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
-            ->join('jadwal_mhs as jm', 'jm.id', '=', 'angkets.id_jadwal_mhs')
-            ->join('jadwal as j', 'j.id', '=', 'jm.id_jadwal')
-            ->join('matakuliah as mt', 'mt.id', '=', 'j.id_matkul')
-            ->join('users as u', 'u.id', '=', 'j.id_dosen')
-            ->where('jpt.name', '=', 'Performansi Dosen')
-            ->where('angkets.periode', '=', $periode)
-            ->where('mt.semester', '=', $semester)
-            ->where('p.text', '=', $pertanyaan);
+        $data = DB::table('report_issue_dosen')
+            ->where('periode', '=', $periode)
+            ->where('semester', '=', $semester)
+            ->where('text', '=', $pertanyaan);
 
-        $data = $data->select(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name               AS jenis_pertanyaan,
-              j.ruang,
-              u.name as dosen,
-              mt.name as matkul,
-              p.text,
-              round(avg(ad.rate), 2) AS avg_rate
-            '))
-            ->groupBy(DB::raw('
-            angkets.periode,
-              mt.semester,
-              jpt.name,
-              j.ruang,
-              u.name,
-              mt.name,
-              p.text
-            '))
-            ->orderBy('avg_rate');
+        $data = $data->orderBy('rate');
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
-                $detail = "<form action='" . route('report.general-detail') . "' method='POST'>";
-                $detail .= FormFacade::hidden('pertanyaan', $data->text, []);
-                $detail .= FormFacade::hidden('semester', $data->semester, []);
-                $detail .= FormFacade::hidden('periode', $data->periode, []);
-                $detail .= csrf_field();
-                $detail .= '<button type="submit" id="btn-delete" class="btn btn-info">Assign Issue</button>';
-                $detail .= '</form>';
+                $issue = Issue::where('periode', '=', $data->periode)
+                    ->where('semester', '=', $data->semester)
+                    ->where('jenis_pertanyaan', '=', $data->jenis_pertanyaan)
+                    ->where('ruang', '=', $data->ruang)
+                    ->where('pertanyaan', '=', $data->text)
+                    ->where('avg_rate', '=', $data->rate)
+                    ->first();
+                if (empty($issue)) {
+                    $detail = "<form action='" . route('issue.store') . "' method='POST'>";
+                    $detail .= FormFacade::hidden('pertanyaan', $data->text, []);
+                    $detail .= FormFacade::hidden('semester', $data->semester, []);
+                    $detail .= FormFacade::hidden('periode', $data->periode, []);
+                    $detail .= FormFacade::hidden('jenis_pertanyaan', $data->jenis_pertanyaan, []);
+                    $detail .= FormFacade::hidden('ruang', $data->ruang, []);
+                    $detail .= FormFacade::hidden('dosen', $data->dosen, []);
+                    $detail .= FormFacade::hidden('matkul', $data->matkul, []);
+                    $detail .= FormFacade::hidden('avg_rate', $data->rate, []);
+                    $detail .= csrf_field();
+                    $detail .= '<button type="submit" id="btn-delete" class="btn btn-info">Assign Issue</button>';
+                    $detail .= '</form>';
+                } else {
+                    $detail = FormFacade::open([
+                        'method' => 'get',
+                        'url' => route('issue.index')
+                    ]);
+                    $detail .= FormFacade::submit('Lihat Issue', ['class' => 'btn btn-info']);
+                    $detail .= FormFacade::close();
+                }
+
                 return $detail;
+
             })
             ->make(true);
         return $datatables;

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Feedbacks extends Model
 {
@@ -24,7 +25,12 @@ class Feedbacks extends Model
     protected $dates = ['deleted_at'];
 
     public function detail() {
-        return $this->hasMany('\App\Feedback_Details','feedback_id','id');
+        return $this->hasMany('\App\Feedback_Details','feedback_id');
+    }
+
+    public function created_time()
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at);
     }
 
 }

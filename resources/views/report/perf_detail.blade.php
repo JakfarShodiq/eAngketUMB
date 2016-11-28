@@ -86,7 +86,7 @@
                     {data: 'dosen', name: 'dosen'},
                     {data: 'matkul', name: 'matkul'},
                     {data: 'text', name: 'text'},
-                    {data: 'avg_rate', name: 'avg_rate', orderable: true},
+                    {data: 'rate', name: 'rate', orderable: true},
                     {data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });

@@ -42,6 +42,13 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="issue" class="col-md-4 control-label">Keluhan</label>
+                            <div class="col-xs-6">
+                                {{ Form::textarea('keluhan',$ticket->note,array('class'   => 'form-control','id'  =>  'keluhan','readonly'))  }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label for="status" class="col-md-4 control-label">Status</label>
                             <div class="col-xs-6">
                                 {{ Form::select('status',$status,array('class'   => 'form-control select2','id'  =>  'status','readonly'))  }}

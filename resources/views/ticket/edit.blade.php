@@ -42,7 +42,6 @@
                             </div>
                         </div>
 
-
                         <div class="form-group">
                             <label for="note" class="col-md-4 control-label">Pesan</label>
                             <div class="col-xs-6">

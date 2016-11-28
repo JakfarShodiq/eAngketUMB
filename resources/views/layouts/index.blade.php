@@ -28,7 +28,9 @@
     <link rel="stylesheet" href="{{ URL::asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{ URL::asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables.min.1.10.12.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\dataTables.jqueryui.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables_themeroller.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\select2\select2.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\dataTables.bootstrap.css') }}">
     <link rel="stylesheet"
@@ -50,7 +52,7 @@
     <script src="{{ URL::asset('plugins\select2\select2.full.min.js') }}"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <!-- Datatables -->
-    <script src="{{ URL::asset('plugins\datatables\jquery.dataTables.min.js') }}"></script>
+    <script src="{{ URL::asset('plugins\datatables\jquery.dataTables.min.1.10.12.js') }}"></script>
     <script src="{{ URL::asset('plugins\datatables\extensions\RawReorder\dataTables.rowReorder.min.js') }}"></script>
     <script src="{{ URL::asset('plugins\datatables\extensions\Responsive\dataTables.responsive.min.js') }}"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -424,12 +426,32 @@
                     </ul>
                 </li>
 
+                @if(Auth::user()->role->name == "Mahasiswa")
                 <li class="{{ Request::is('angket') ? 'active' : '' }}">
                     <a href="{{ route('angket.index') }}">
                         <i class="fa fa-list-ol"></i> <span>Angket</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                 </li>
+                @endif
+
+                @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
+                <li class="{{ Request::is('ticket') ? 'active' : '' }}">
+                    <a href="{{ route('ticket.index') }}">
+                        <i class="fa fa-list-ol"></i> <span>Ticket</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                </li>
+                @endif
+
+                @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
+                <li class="{{ Request::is('issue') ? 'active' : '' }}">
+                    <a href="{{ route('issue.index') }}">
+                        <i class="fa fa-list-ol"></i> <span>Issue</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                </li>
+                @endif
 
                 @if(Auth::user()->role->name == "Dosen")
                 <li class="{{ Request::is('dosen') ? 'active' : '' }}">

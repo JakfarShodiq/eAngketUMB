@@ -96,6 +96,10 @@
         });
 
         var table = $('#categories-table').DataTable({
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            responsive: true,
             processing: true,
             serverSide: true,
             ajax: '{{ route('categories.datatables') }}',

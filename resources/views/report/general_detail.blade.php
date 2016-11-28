@@ -82,7 +82,7 @@
                     {data: 'jenis_pertanyaan', name: 'jenis_pertanyaan'},
                     {data: 'ruang', name: 'ruang'},
                     {data: 'text', name: 'text'},
-                    {data: 'avg_rate', name: 'avg_rate', orderable: true},
+                    {data: 'rate', name: 'rate', orderable: true},
                     {data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });

@@ -6,8 +6,11 @@ use App\Angket_Details;
 use App\Feedback_Details;
 use App\Feedbacks;
 use App\Issue;
+use App\Roles;
 use App\Status;
+use App\User;
 use Collective\Html\FormFacade;
+use Illuminate\Contracts\Logging\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,11 +50,11 @@ class FeedbacksController extends Controller
             ->join('pic_categories as pc', 'pc.category_id', '=', 'c.id')
             ->join('roles as r', 'r.id', '=', 'pc.role_id')
 //            ->select(DB::raw('p.id as pertanyaan,r.id as role_id,r.name'))->get();
-            ->pluck('r.name','r.id');
+            ->pluck('r.name', 'r.id');
 
-        return view('ticket.create')->with('roles',$roles)
-            ->with('pertanyaan',$pertanyaan)
-            ->with('issue',$issue);
+        return view('ticket.create')->with('roles', $roles)
+            ->with('pertanyaan', $pertanyaan)
+            ->with('issue', $issue);
     }
 
     /**
@@ -79,11 +82,10 @@ class FeedbacksController extends Controller
         $model->assigned_to = $assigned_to;
         $model->note = $note;
 
-        if($model->save()){
-            return redirect()->route('ticket.index')->with('status','Ticket sudah berhasil dibuat !');
-        }
-        else
-            return redirect()->route('ticket.index')->with('status','Ticket gagal dibuat !');
+        if ($model->save()) {
+            return redirect()->route('ticket.index')->with('status', 'Ticket sudah berhasil dibuat !');
+        } else
+            return redirect()->route('ticket.index')->with('status', 'Ticket gagal dibuat !');
     }
 
     /**
@@ -98,21 +100,24 @@ class FeedbacksController extends Controller
         $ticket = Feedbacks::find($id);
         $ticket_detail = clone $ticket;
         $ticket_detail = $ticket->detail();
-        $status = Status::whereIn('id',[2,3])->pluck('name','id');
-        return view('ticket.show')->with('ticket',$ticket)
-            ->with('detail',$ticket_detail)
-            ->with('status',$status);
+        $status = Status::whereIn('id', [2, 3])->pluck('name', 'id');
+        return view('ticket.show')->with('ticket', $ticket)
+            ->with('detail', $ticket_detail)
+            ->with('status', $status);
     }
 
-    function generateTableDetail(){
+    function generateTableDetail()
+    {
         $id = $_REQUEST['id'];
-        $data = Feedbacks::find($id)->join('feedback_details as fd','feedbacks.id','=','fd.feedback_id')
-            ->join('users as u','u.id','=','fd.created_by')
-        ->select(DB::raw('
+        $data = Feedbacks::find($id)->join('feedback_details as fd', 'feedbacks.id', '=', 'fd.feedback_id')
+            ->join('users as u', 'u.id', '=', 'fd.created_by')
+            ->join('status as s', 's.id', '=', 'fd.status')
+            ->where('feedbacks.id', '=', $id)
+            ->select(DB::raw('
         feedbacks.id,
         fd.note,
         u.name,
-        fd.status,
+        s.name as status,
         to_char(fd.created_at,\'yyyy-mm-dd hh24:mi:ss\') as waktu
         '));
         $datatables = Datatables::of($data)
@@ -131,10 +136,10 @@ class FeedbacksController extends Controller
     {
         //
         $model = Feedbacks::find($id);
-        $status = Status::whereIn('id',[1,4])->pluck('name','id');
+        $status = Status::whereIn('id', [1, 4])->pluck('name', 'id');
         return view('ticket.edit')
-            ->with('model',$model)
-            ->with('status',$status);
+            ->with('model', $model)
+            ->with('status', $status);
     }
 
     /**
@@ -154,11 +159,10 @@ class FeedbacksController extends Controller
         $model->status = $status;
         $model->updated_by = $updated_by;
 
-        if($model->save()){
-            return redirect()->route('ticket.index')->with('status','Ticket berhasil diupdate !');
-        }
-        else
-            return redirect()->route('ticket.index')->with('status','Ticket gagal diupdate !');
+        if ($model->save()) {
+            return redirect()->route('ticket.index')->with('status', 'Ticket berhasil diupdate !');
+        } else
+            return redirect()->route('ticket.index')->with('status', 'Ticket gagal diupdate !');
     }
 
     /**
@@ -172,49 +176,83 @@ class FeedbacksController extends Controller
         //
     }
 
-    public function getDatatables(){
-        $data = Feedbacks::join('issues as i','feedbacks.id_issue','=','i.id')
-                ->join('roles as r','feedbacks.assigned_to','=','r.id')
-                ->select(DB::raw(
-                    'feedbacks.id,
+    public function getDatatables()
+    {
+        $data = Feedbacks::join('issues as i', 'feedbacks.id_issue', '=', 'i.id')
+            ->join('roles as r', 'feedbacks.assigned_to', '=', 'r.id');
+        $role = Auth::user()->role;
+        if ($role->name != "LPPM") {
+            $data = $data->where('feedbacks.assigned_to', '=', $role->id);
+//            Log::info($data->toSql());
+        }
+
+        $data = $data->select(DB::raw(
+            'feedbacks.id,
                     feedbacks.periode,
                     i.jenis_pertanyaan,
                     i.pertanyaan,
                     r.name,
                     feedbacks.status'
-                ));
+        ));
+
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
-                $finish = Feedback_Details::where('feedback_id','=',$data->id)
-                    ->where('status','=',3)
+                $role = Auth::user()->role;
+                $detail = Feedback_Details::where('feedback_id', '=', $data->id)->count();
+                $finish = Feedback_Details::where('feedback_id', '=', $data->id)
+                    ->where('status', '=', 3)
                     ->first();
+                $user = Auth::user()->role;
 
-                if(empty($finish)){
+                if (!empty($finish)) {
                     $button = FormFacade::open([
-                        'method' =>  'get',
-                        'url'   =>  route('ticket.show',$data->id)
+                        'method' => 'post',
+                        'url' => route('ticket.history')
                     ]);
-                    $button .= FormFacade::submit('Lihat Ticket',['class' =>'btn btn-success']);
+                    $button .= FormFacade::hidden('id', $data->id);
+                    $button .= FormFacade::submit('History Ticket', ['class' => 'btn btn-default']);
+                    $button .= FormFacade::close();
+                } elseif ($user->name != "LPPM") {
+                    $button = FormFacade::open([
+                        'method' => 'get',
+                        'url' => route('ticket.show', $data->id)
+                    ]);
+                    $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-info']);
+                    $button .= FormFacade::close();
+                } elseif ($user->name == "LPPM") {
+                    $button = FormFacade::open([
+                        'method' => 'get',
+                        'url' => route('ticket.edit', $data->id)
+                    ]);
+                    $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-success']);
                     $button .= FormFacade::close();
                 }
-                elseif (!empty(Feedbacks::find($data->id)->where('status','=',4)->first())){
+
+                /*
+                 * if (empty($finish) and $detail > 0) {
                     $button = FormFacade::open([
-                        'method' =>  'post',
-                        'url'   =>  route('ticket.history')
+                        'method' => 'get',
+                        'url' => route('ticket.show', $data->id)
                     ]);
-                    $button .= FormFacade::hidden('id',$data->id);
-                    $button .= FormFacade::submit('Lihat Ticket',['class' =>'btn btn-success']);
+                    $button .= FormFacade::submit('Lihat Ticket', ['class' => 'btn btn-success']);
+                    $button .= FormFacade::close();
+                } elseif (!empty(Feedbacks::find($data->id)->where('status', '=', 4)->first())) {
+                    $button = FormFacade::open([
+                        'method' => 'post',
+                        'url' => route('ticket.history')
+                    ]);
+                    $button .= FormFacade::hidden('id', $data->id);
+                    $button .= FormFacade::submit('Lihat Ticket', ['class' => 'btn btn-success']);
+                    $button .= FormFacade::close();
+                } else {
+                    $button = FormFacade::open([
+                        'method' => 'get',
+                        'url' => route('ticket.edit', $data->id)
+                    ]);
+                    $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-info']);
                     $button .= FormFacade::close();
                 }
-                else
-                {
-                    $button = FormFacade::open([
-                        'method' =>  'get',
-                        'url'   =>  route('ticket.edit',$data->id)
-                    ]);
-                    $button .= FormFacade::submit('Update Ticket',['class' =>'btn btn-info']);
-                    $button .= FormFacade::close();
-                }
+                */
 
                 return $button;
             })
@@ -223,8 +261,31 @@ class FeedbacksController extends Controller
         return $datatables;
     }
 
-    public function history(Request $request){
-        return $request['id'];
+    public function history(Request $request)
+    {
 
+        $id = $request['id'];
+        $model = Feedbacks::find($id);
+        $detail = Feedbacks::find($id)->join('feedback_details as fd', 'feedbacks.id', '=', 'fd.feedback_id')
+            ->join('users as u', 'fd.created_by', '=', 'u.id')
+            ->join('status as s', 'fd.status', '=', 's.id')
+            ->where('fd.feedback_id','=',$id)
+            ->select(DB::raw('
+                fd.id,
+                u.name as username,
+                fd.note as note,
+                to_char(fd.created_at,\'yyyy-mm-dd hh24:mi:ss\') as waktu,
+                s.name as status                                                                          
+                '))
+            ->orderBy('fd.id')
+            ->get();
+        $role_user = User::find($model->created_by);
+//        return $role_user;
+        $roles = Roles::find($role_user->role_id);
+//        return $model;
+        return view('ticket.history')
+            ->with('model', $model)
+            ->with('roles', $roles)
+            ->with('detail', $detail);
     }
 }

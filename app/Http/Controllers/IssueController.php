@@ -48,15 +48,15 @@ class IssueController extends Controller
         $ruang = $request['ruang'];
         $avg_rate = $request['avg_rate'];
 
-        if (empty($request['nama_dosen'])) {
+        if (empty($request['dosen'])) {
             $nama_dosen = null;
         } else
-            $nama_dosen = $request['nama_dosen'];
+            $nama_dosen = $request['dosen'];
 
-        if (empty($request['matakuliah'])) {
+        if (empty($request['matkul'])) {
             $matakuliah = null;
         } else
-            $matakuliah = $request['matakuliah'];
+            $matakuliah = $request['matkul'];
 
         $model = new Issue();
         $model->periode = $periode;
