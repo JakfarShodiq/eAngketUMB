@@ -189,7 +189,7 @@ class FeedbacksController extends Controller
             ->join('roles as r', 'feedbacks.assigned_to', '=', 'r.id')
             ->join('status as s', 's.id', '=', 'feedbacks.status');
         $role = Auth::user()->role;
-        if ($role->name != "LPPM") {
+        if ($role->name != "LPPM" and $role->name != "Administrator") {
             $data = $data->where('feedbacks.assigned_to', '=', $role->id);
         }
 

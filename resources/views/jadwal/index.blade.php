@@ -29,64 +29,63 @@
                     <div class="box-body">
                         <form class="form-horizontal" role="form" method="POST" action="#">
                             {{ csrf_field() }}
-                            <div class="form-group">
-                                <label for="name" class="col-md-4 control-label">Tahun Ajaran</label>
-                                <div class="col-xs-3">
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-4 control-label">Tahun Ajaran</label>
+                                <div class="col-sm-6">
                                     {{ Form::text('tahun_ajaran',date('Y').'/'.date('Y', strtotime('+1 year')),array('class'   => 'form-control','id'  =>  'tahun_ajaran'))  }}
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="roles">Mata Kuliah</label>
-                                <div class="col-md-4">
-                                    {{ Form::select('matkul',$matkul,'',['id'   =>  'matkul','class'   =>  'form-control select2'])}}
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label" for="roles">Mata Kuliah</label>
+                                <div class="col-sm-6">
+                                    {{ Form::select('matkul',$matkul,'',['id'   =>  'matkul','class'   =>  'select2'])}}
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="roles">Mata Kuliah</label>
-                                <div class="col-md-4">
-                                    {{ Form::select('dosen',$dosen,'',['id'   =>  'dosen','class'   =>  'form-control select2'])}}
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label" for="roles">Mata Kuliah</label>
+                                <div class="col-sm-6">
+                                    {{ Form::select('dosen',$dosen,'',['id'   =>  'dosen','class'   =>  'select2'])}}
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="name" class="col-md-4 control-label">Ruang</label>
-                                <div class="col-xs-1">
+                            <div class="form-group row">
+                                <label for="ruang" class="col-sm-4 control-label">Ruang</label>
+                                <div class="col-sm-6">
                                     {{ Form::text('ruang','',array('class'   => 'form-control','id'  =>  'ruang'))  }}
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="time_start" class="col-md-4 control-label">Waktu Mulai</label>
-                                <div class="col-xs-1 bootstrap-timepicker">
-                                    {{ Form::text('time_start','',array('class'   => 'form-control','id'  =>  'time_start'))  }}
-                                </div>
-
-                            </div>
-
-                            <div class="form-group">
-                                <label for="time_end" class="col-md-4 control-label">Waktu Selesai</label>
-                                <div class="col-xs-1 bootstrap-timepicker">
-                                    {{ Form::text('time_end','',array('class'   => 'form-control','id'  =>  'time_end'))  }}
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="hari" class="col-md-4 control-label">Hari</label>
-                                <div class="col-md-3">
-                                    {{ Form::select('hari',$day,'',['id'    => 'hari','class'   =>  'form-control select2']) }}
+                            <div class="form-group row">
+                                <label for="time_start" class="col-sm-4 control-label">Waktu</label>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-xs-6  bootstrap-timepicker">
+                                            {{ Form::text('time_start','',array('class'   => 'form-control','id'  =>  'time_start'))  }}
+                                        </div>
+                                        <div class="col-xs-6 bootstrap-timepicker">
+                                            {{ Form::text('time_end','',array('class'   => 'form-control col-xs-6','id'  =>  'time_end'))  }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="roles">Quota</label>
-                                <div class="col-xs-1">
-                                    {{ Form::number('qty', '',['id'   =>  'qty','min'    =>  0]) }}
+                            <div class="form-group row">
+                                <label for="hari" class="col-sm-4 control-label">Hari</label>
+                                <div class="col-sm-6">
+                                    {{ Form::select('hari',$day,'',['id'    => 'hari','class'   =>  'select2']) }}
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label" for="roles">Quota</label>
+                                <div class="col-sm-6">
+                                    {{ Form::number('qty', '',['id'   =>  'qty','min'    =>  0, 'class' => 'form-control']) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <div class="col-md-6 col-md-offset-4">
                                     <a id="btn-add" name="btn-add" class="btn btn-success">
                                         Tambahkan

@@ -166,4 +166,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('ticket', 'FeedbacksController');
 
     Route::resource('ticket-details', 'FeedbackDetailsController');
+
+    Route::get('pengumuman/datatables', array(
+        'uses' => 'PengumumanController@getPengumuman',
+        'as' => 'pengumuman.datatables'
+    ));
+    Route::resource('pengumuman', 'PengumumanController');
 });

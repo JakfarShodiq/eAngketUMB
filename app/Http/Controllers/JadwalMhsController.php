@@ -162,7 +162,7 @@ class JadwalMhsController extends Controller
                 $delete = "<form action='" . route('jadwal-mhs.destroy', $data->jadwal_mhs_id) . "' method='POST'>";
                 $delete .= "<input type='hidden' name='_method' value='DELETE'>";
                 $delete .= csrf_field();
-                $delete .= '<button type="submit" id="btn-delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"> Delete</i></button>';
+                $delete .= '<button type="submit" id="btn-delete" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove">Delete</span></button>';
                 $delete .= '</form>';
                 return $delete;
             })
