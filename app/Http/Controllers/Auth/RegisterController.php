@@ -72,6 +72,7 @@ class RegisterController extends Controller
             'username'  =>  $data['identity_number'],
             'address'   => $data['address'],
             'phone'   => $data['phone'],
+            'education'   => $data['education'],
             'gender'    =>  $data['gender'],
             'birth_place'   =>  $data['birth_place'],
             'birth_date'    =>  $data['birth_date'],
