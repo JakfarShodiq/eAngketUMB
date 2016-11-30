@@ -140,11 +140,14 @@
                     categories: categories
                 },
                 success: function (result) {
+                    console.log(result.select_jenispt)
                     $('#jenispt').empty();
                     $('#jenispt').html(result.select_jenispt);
                 }
             });
         }
+
+        generate_categories();
 
         $('#kelas').change(function () {
             var kelas = $('#kelas').val();

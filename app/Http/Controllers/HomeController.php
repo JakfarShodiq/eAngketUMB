@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Pengumuman;
+use Yajra\Datatables\Facades\Datatables;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -23,7 +26,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $pengumuman = Pengumuman::join('users as u','u.id','=','notifications.created_by')
+        ->join('roles as r','r.id','=','u.role_id')
+        ->select(DB::raw('notifications.id,notifications.note,notifications.created_at,notifications.updated_at,u.name as username,r.name as roles'))
+        ->orderBy('created_at','desc')->get();
+
+        return view('home')
+            ->with('pengumuman',$pengumuman);
     }
 
     public function master(){
