@@ -28,8 +28,8 @@ class HomeController extends Controller
     {
         $pengumuman = Pengumuman::join('users as u','u.id','=','notifications.created_by')
         ->join('roles as r','r.id','=','u.role_id')
-        ->select(DB::raw('notifications.id,notifications.note,notifications.created_at,notifications.updated_at,u.name as username,r.name as roles'))
-        ->orderBy('created_at','desc')->get();
+        ->select(DB::raw('notifications.id,notifications.note,notifications.id_feedbacks,notifications.created_at,notifications.updated_at,u.name as username,r.name as roles'))
+        ->orderBy('created_at','desc')->limit(10)->get();
 
         return view('home')
             ->with('pengumuman',$pengumuman);

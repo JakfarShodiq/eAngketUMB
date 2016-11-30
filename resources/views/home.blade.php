@@ -14,15 +14,10 @@
                                 <ul class="timeline">
                                     <!-- timeline time label -->
                                     <li class="time-label">
-                  <span class="bg-green">
-                      {{ date(' d M Y', strtotime($pengumumans->created_at )) }}
-                  </span>
+                                        <span class="bg-green">{{ date(' d M Y', strtotime($pengumumans->created_at )) }}</span>
                                     </li>
-                                    <!-- /.timeline-label -->
-                                    <!-- timeline item -->
                                     <li>
                                         <i class="fa fa-feed bg-blue"></i>
-
                                         <div class="timeline-item">
                             <span class="time"><i class="fa fa-clock-o"></i>
                                 {{ $pengumumans->created_at }}
@@ -35,7 +30,14 @@
                                                 {{ $pengumumans->note }}
                                             </div>
                                             <div class="timeline-footer">
-
+                                                {{ Form::open([
+                                                'method'  =>   'post',
+                                                'target'    =>  '_blank',
+                                                'url'   =>  route('ticket.history')
+                                                ]) }}
+                                                {{ Form::hidden('id',$pengumumans->id_feedbacks) }}
+                                                {{ Form::submit('Lihat Detail Ticket',['class'  =>  'btn btn-default']) }}
+                                                {{ Form::close() }}
                                             </div>
                                         </div>
                                     </li>
