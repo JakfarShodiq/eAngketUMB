@@ -30,8 +30,10 @@
     <link rel="stylesheet" href="{{ URL::asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\dataTables.jqueryui.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables.min.1.10.12.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.dataTables.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ URL::asset('plugins\datatables\extensions\RawReorder\rowReorder.dataTables.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\select.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins/timepicker/bootstrap-timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('plugins\datatables\jquery.dataTables_themeroller.css') }}">
@@ -133,7 +135,8 @@
 
                                 <p>
                                     {{ Auth::user()->name }} - {{ Auth::user()->role->name }}
-                                    <small>Member since {{ date(' d M Y', strtotime(Auth::user()->join_date )) }}</small>
+                                    <small>Member
+                                        since {{ date(' d M Y', strtotime(Auth::user()->join_date )) }}</small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
@@ -171,25 +174,25 @@
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','DEKAN','Administrator']))
-                <li class="treeview {{ in_array(Request::path(),array('categories','kelas','jenis_pertanyaan','pertanyaan')) ? 'active' : '' }}">
-                    <a href="/">
-                        <i class="fa fa-file-text"></i> <span>Pertanyaan</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{{ Request::is('categories') ? 'active' : '' }}"><a
-                                    href="{{ route('categories.index') }}"><i class="fa fa-tag"></i>Kategori
-                                Pelayanan</a></li>
-                        <li class="{{ Request::is('kelas') ? 'active' : '' }}"><a href="{{ route('kelas.index') }}"><i
-                                        class="fa fa-university"></i>Jenis Kelas</a></li>
-                        <li class="{{ Request::is('jenis_pertanyaan') ? 'active' : '' }}"><a
-                                    href="{{ route('jenis_pertanyaan.index') }}"><i class="fa fa-external-link"></i>Kategori
-                                Pertanyaan</a></li>
-                        <li class="{{ Request::is('pertanyaan') ? 'active' : '' }}"><a
-                                    href="{{ route('pertanyaan.index') }}"><i class="fa fa-edit"></i>Master
-                                Pertanyaan</a></li>
-                    </ul>
-                </li>
+                    <li class="treeview {{ in_array(Request::path(),array('categories','kelas','jenis_pertanyaan','pertanyaan')) ? 'active' : '' }}">
+                        <a href="/">
+                            <i class="fa fa-file-text"></i> <span>Master Angket</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ Request::is('categories') ? 'active' : '' }}"><a
+                                        href="{{ route('categories.index') }}"><i class="fa fa-tag"></i>Kategori
+                                    Pelayanan</a></li>
+                            <li class="{{ Request::is('kelas') ? 'active' : '' }}"><a href="{{ route('kelas.index') }}"><i
+                                            class="fa fa-university"></i>Jenis Kelas</a></li>
+                            <li class="{{ Request::is('jenis_pertanyaan') ? 'active' : '' }}"><a
+                                        href="{{ route('jenis_pertanyaan.index') }}"><i class="fa fa-external-link"></i>Kategori
+                                    Pertanyaan</a></li>
+                            <li class="{{ Request::is('pertanyaan') ? 'active' : '' }}"><a
+                                        href="{{ route('pertanyaan.index') }}"><i class="fa fa-edit"></i>Master
+                                    Pertanyaan</a></li>
+                        </ul>
+                    </li>
                 @endif
                 <li class="{{ Request::is('user') ? 'active' : '' }}">
                     <a href="{{ route('user.index') }}">
@@ -204,12 +207,13 @@
                     </a>
                     <ul class="treeview-menu">
                         @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
-                        <li class="{{ Request::is('matakuliah') ? 'active' : '' }}"><a
-                                    href="{{ route('matakuliah.index') }}"><i class="fa fa-calendar-times-o"></i>Mata
-                                Kuliah</a></li>
-                        <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
-                                    href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal Mata
-                                Kuliah</a></li>
+                            <li class="{{ Request::is('matakuliah') ? 'active' : '' }}"><a
+                                        href="{{ route('matakuliah.index') }}"><i class="fa fa-calendar-times-o"></i>Mata
+                                    Kuliah</a></li>
+                            <li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a
+                                        href="{{ route('jadwal.index') }}"><i class="fa fa-calendar-check-o"></i>Jadwal
+                                    Mata
+                                    Kuliah</a></li>
                         @endif
                         @if(Auth::user()->role->name == "Mahasiswa")
                             <li class="{{ Request::is('jadwal-mhs') ? 'active' : '' }}"><a
@@ -220,19 +224,20 @@
                 </li>
 
                 @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','DEKAN','Administrator']))
-                <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
-                    <a href="/">
-                        <i class="fa fa-paste "></i> <span>Hasil Angket</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{{ Request::is('report') ? 'active' : '' }}"><a
-                                    href="{{ route('report.index') }}"><i class="fa fa-building"></i>Fasilitas Umum</a>
-                        </li>
-                        <li class="{{ Request::is('report') ? 'active' : '' }}"><a
-                                    href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a></li>
-                    </ul>
-                </li>
+                    <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
+                        <a href="/">
+                            <i class="fa fa-paste "></i> <span>Hasil Angket</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ Request::is('report') ? 'active' : '' }}"><a
+                                        href="{{ route('report.index') }}"><i class="fa fa-building"></i>Fasilitas Umum</a>
+                            </li>
+                            <li class="{{ Request::is('report') ? 'active' : '' }}"><a
+                                        href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a>
+                            </li>
+                        </ul>
+                    </li>
                 @endif
 
                 @if(Auth::user()->role->name == "Mahasiswa")
@@ -272,11 +277,27 @@
                 @endif
 
                 @if(in_array(Auth::user()->role->name,['Administrator','LPPM']))
-                <li class="{{ Request::is('pengumuman') ? 'active' : '' }}">
+                    <li class="{{ Request::is('pengumuman') ? 'active' : '' }}">
                         <a href="{{ route('pengumuman.index') }}">
                             <i class="fa fa-feed"></i> <span>Pengumuman</span>
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                         </a>
+                    </li>
+                @endif
+                @if(in_array(Auth::user()->role->name,['Administrator']))
+                    <li class="treeview {{ in_array(Request::path(),array('user-mgt','matakuliah')) ? 'active' : '' }}">
+                        <a href="/">
+                            <i class="fa fa-gear"></i> <span>Settings</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ Request::is('roles') ? 'active' : '' }}"><a
+                                        href="{{ route('roles.index') }}"><i class="fa fa-key"></i>Roles</a>
+                            </li>
+                            <li class="{{ Request::is('user-mgt') ? 'active' : '' }}"><a
+                                        href="{{ route('user.role') }}"><i class="fa fa-unlock-alt"></i>User Management</a>
+                            </li>
+                        </ul>
                     </li>
                 @endif
             </ul>

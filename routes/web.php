@@ -63,6 +63,22 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'pertanyaan.datatables'
     ));
     Route::resource('pertanyaan', 'PertanyaanController');
+    Route::get('user/datatables', array(
+        'uses' => 'UserController@getDatatables',
+        'as' => 'user.datatables'
+    ));
+    Route::get('user-mgt', [
+        'uses' => 'UserController@manageUsers',
+        'as' => 'user.role'
+    ]);
+    Route::post('user/permission-update', [
+        'uses' => 'UserController@permission_update',
+        'as' => 'user.permission-update'
+    ]);
+    Route::get('reset-password/{id}', [
+        'uses' => 'UserController@resetpassword',
+        'as' => 'user.reset-password'
+    ]);
     Route::resource('user', 'UserController');
     Route::get('matakuliah/datatables', array(
         'uses' => 'MatakuliahController@getDatatables',
@@ -120,9 +136,9 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'report.datatables-general-detail'
     ));
 
-    Route::get('report/perf',[
-       'uses'   =>  'ReportController@index_perf',
-        'as'    =>  'report.perf'
+    Route::get('report/perf', [
+        'uses' => 'ReportController@index_perf',
+        'as' => 'report.perf'
     ]);
 
     Route::get('report/datatables-performance', array(
@@ -160,7 +176,7 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'ticket.datatables-detail'
     ));
     Route::post('ticket/history', [
-        'uses'  =>  'FeedbacksController@history',
+        'uses' => 'FeedbacksController@history',
         'as' => 'ticket.history'
     ]);
     Route::resource('ticket', 'FeedbacksController');
@@ -172,4 +188,5 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'pengumuman.datatables'
     ));
     Route::resource('pengumuman', 'PengumumanController');
+    Route::resource('roles', 'RolesController');
 });
