@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Roles;
+use Collective\Html\FormFacade;
 use Illuminate\Http\Request;
-
+use Yajra\Datatables\Facades\Datatables;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 
 class RolesController extends Controller
@@ -16,6 +19,7 @@ class RolesController extends Controller
     public function index()
     {
         //
+        return view('roles.index');
     }
 
     /**
@@ -82,5 +86,23 @@ class RolesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getDatatables(){
+        $data = Roles::select(DB::raw('
+        id,name,created_at
+        '));
+        $datatables = Datatables::of($data)
+            ->addColumn('action', function ($data) {
+                $delete = FormFacade::submit('Delete',[
+                    'method'  =>   'post',
+                    'url'   => route('roles.destroy',$data->id),
+                    'class' =>  'btn btn-danger'
+                ]);
+                return $delete;
+            })
+            ->make(true);
+
+        return $datatables;
     }
 }

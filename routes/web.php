@@ -188,5 +188,10 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'pengumuman.datatables'
     ));
     Route::resource('pengumuman', 'PengumumanController');
+
+    Route::get('roles/datatables', array(
+        'uses' => 'RolesController@getDatatables',
+        'as' => 'roles.datatables'
+    ));
     Route::resource('roles', 'RolesController');
 });

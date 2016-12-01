@@ -127,7 +127,7 @@ class UserController extends Controller
         $roles = $request['role_id'];
         $name = $request['name'];
         $data = User::join('roles as r', 'users.role_id', '=', 'r.id');
-        if (!empty($roles) and !empty($name)) {
+        if (!empty($roles) OR !empty($name)) {
             if ($roles == 'all') {
                 $data = $data->whereRaw('users.name like \'%' . $name . '%\'');
             } else
