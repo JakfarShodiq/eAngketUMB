@@ -193,5 +193,9 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'RolesController@getDatatables',
         'as' => 'roles.datatables'
     ));
+    Route::post('roles/update-role', array(
+        'uses' => 'RolesController@updateRoles',
+        'as' => 'roles.update-role'
+    ));
     Route::resource('roles', 'RolesController');
 });

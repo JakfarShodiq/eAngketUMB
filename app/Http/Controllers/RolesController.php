@@ -41,6 +41,14 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         //
+        $name = $request['name'];
+        $model = new Roles();
+        $model->name = $name;
+
+        if($model->save()){
+            return redirect()->route('roles.index')->with('status', 'Record Successfully Inserted !');
+        } else
+            return redirect()->route('roles.index')->with('status', 'Record Failed Update !');
     }
 
     /**
@@ -104,5 +112,9 @@ class RolesController extends Controller
             ->make(true);
 
         return $datatables;
+    }
+
+    public function updateRoles(Request $request){
+        return $request;
     }
 }

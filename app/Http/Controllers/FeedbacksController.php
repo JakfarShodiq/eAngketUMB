@@ -106,7 +106,7 @@ class FeedbacksController extends Controller
         return view('ticket.show')->with('ticket', $ticket)
             ->with('detail', $ticket_detail)
             ->with('status', $status)
-            ->with('issue',$issue);
+            ->with('issue', $issue);
 
     }
 
@@ -146,7 +146,7 @@ class FeedbacksController extends Controller
         return view('ticket.edit')
             ->with('model', $model)
             ->with('status', $status)
-            ->with('issue',$issue);
+            ->with('issue', $issue);
     }
 
     /**
@@ -212,9 +212,8 @@ class FeedbacksController extends Controller
                 $finish = Feedback_Details::where('feedback_id', '=', $data->id)
                     ->where('status', '=', 3)
                     ->first();
-                $close = Feedbacks::find($data->id)
-//                    ->where('feedbacks.status','=',4)
-                    ;
+                $close = Feedbacks::find($data->id)//                    ->where('feedbacks.status','=',4)
+                ;
                 $user = Auth::user()->role;
 
                 if ($close->status == 4) {
@@ -225,29 +224,19 @@ class FeedbacksController extends Controller
                     $button .= FormFacade::hidden('id', $data->id);
                     $button .= FormFacade::submit('History Ticket', ['class' => 'btn btn-default']);
                     $button .= FormFacade::close();
-                }
-                /*elseif (!empty($close)) {
-                    $button = FormFacade::open([
-                        'method' => 'get',
-                        'url' => route('ticket.edit',$data->id)
-                    ]);
-                    $button .= FormFacade::hidden('id', $data->id);
-                    $button .= FormFacade::submit('History Ticket', ['class' => 'btn btn-success']);
-                    $button .= FormFacade::close();
-                }*/
-                elseif ($user->name != "LPPM" and $user->name != "Mahasiswa") {
-                    $button = FormFacade::open([
-                        'method' => 'get',
-                        'url' => route('ticket.show', $data->id)
-                    ]);
-                    $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-info']);
-                    $button .= FormFacade::close();
-                } elseif ($user->name == "LPPM") {
+                } elseif ($user->name == "LPPM" or $user->name == "Administrator") {
                     $button = FormFacade::open([
                         'method' => 'get',
                         'url' => route('ticket.edit', $data->id)
                     ]);
                     $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-success']);
+                    $button .= FormFacade::close();
+                } elseif ($user->name != "LPPM" or $user->name != "Mahasiswa") {
+                    $button = FormFacade::open([
+                        'method' => 'get',
+                        'url' => route('ticket.show', $data->id)
+                    ]);
+                    $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-info']);
                     $button .= FormFacade::close();
                 } else
                     $button = '';
