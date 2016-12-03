@@ -98,16 +98,13 @@ class FeedbacksController extends Controller
     {
         //
         $ticket = Feedbacks::find($id);
-        $ticket_detail = clone $ticket;
         $issue = clone $ticket;
-        $ticket_detail = $ticket->detail();
         $issue = $issue->issue;
         $status = Status::whereIn('id', [2, 3])->pluck('name', 'id');
+
         return view('ticket.show')->with('ticket', $ticket)
-            ->with('detail', $ticket_detail)
             ->with('status', $status)
             ->with('issue', $issue);
-
     }
 
     function generateTableDetail()
