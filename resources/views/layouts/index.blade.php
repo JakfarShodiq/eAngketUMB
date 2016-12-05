@@ -230,13 +230,13 @@
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                         </a>
                         <ul class="treeview-menu">
-                            @if(in_array(Auth::user()->role->name,['SDM','KAPRODI','Administrator']))
+                            @if(in_array(Auth::user()->role->name,['POP','BJM','Administrator']))
                                 <li class="{{ Request::is('report') ? 'active' : '' }}"><a
                                             href="{{ route('report.index') }}"><i class="fa fa-building"></i>Fasilitas
                                         Umum</a>
                                 </li>
                             @endif
-                            @if(in_array(Auth::user()->role->name,['POP','BJM','Administrator']))
+                            @if(in_array(Auth::user()->role->name,['KAPRODI','SDM','Administrator']))
                                 <li class="{{ Request::is('report') ? 'active' : '' }}"><a
                                             href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a>
                                 </li>
