@@ -21,6 +21,7 @@ class Issue extends Model
         ,'created_at'
         ,'updated_at'
         ,'deleted_at'
+        ,'category'
     ];
 
     protected $dates = ['deleted_at'];

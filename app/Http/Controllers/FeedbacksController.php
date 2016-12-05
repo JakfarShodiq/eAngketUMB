@@ -41,17 +41,42 @@ class FeedbacksController extends Controller
         $issue = Issue::find($issue_id);
         $pertanyaan = Issue::findOrFail($issue_id)
             ->join('pertanyaan as p', 'p.text', '=', 'issues.pertanyaan');
-        $roles = clone $pertanyaan;
+//        $roles = clone $pertanyaan;
+        $roles = Roles::all();
         $pertanyaan = $pertanyaan->select('p.*')->first();
-
-        $roles = $roles->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
+//        return $issue;
+        /*
+         * $roles = $roles->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
             ->join('kelas_categories as kc', 'kc.id', '=', 'jpt.kelas_category')
             ->join('categories as c', 'c.id', '=', 'kc.id_category')
             ->join('pic_categories as pc', 'pc.category_id', '=', 'c.id')
-            ->join('roles as r', 'r.id', '=', 'pc.role_id')
-//            ->select(DB::raw('p.id as pertanyaan,r.id as role_id,r.name'))->get();
-            ->pluck('r.name', 'r.id');
+            ->join('roles as r', 'r.id', '=', 'pc.role_id');
+        */
+        /*
+        Pelayanan Unit
+        Belajar Mengajar
+        Sarana Prasarana Kelas
+        Pelayanan Umum
+        */
+//        return $roles->pluck('name', 'id');
+        $current_role = Auth::user()->role->name;
 
+        if ($issue->category == "Dosen") {
+            if ($current_role == "KAPRODI") {
+                $roles = $roles->whereIn('name', ['DEKAN']);
+            } else
+                $roles = $roles->whereIn('name', ['KAPRODI', 'DEKAN']);
+        } elseif ($issue->category == "Belajar Mengajar") {
+            $roles = $roles->whereIn('name', ['KAPRODI']);
+        } elseif ($issue->category == "Sarana Prasarana Kelas") {
+            $roles = $roles->whereIn('name', ['BMGS']);
+        } elseif ($issue->category == "Pelayanan Umum") {
+            $roles = $roles->whereIn('name', ['BMGS']);
+        } elseif ($issue->category == "Pelayanan Unit") {
+            $roles = $roles->whereIn('name', ['BJM']);
+        }
+        $roles = $roles->pluck('name', 'id');
+//        return $issue->category . '<br>' . $current_role . '<br>' . $roles;
         return view('ticket.create')->with('roles', $roles)
             ->with('pertanyaan', $pertanyaan)
             ->with('issue', $issue);
@@ -63,7 +88,8 @@ class FeedbacksController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public
+    function store(Request $request)
     {
         //
         $issue_id = $request['issue_id'];
@@ -94,14 +120,15 @@ class FeedbacksController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public
+    function show($id)
     {
         //
         $ticket = Feedbacks::find($id);
         $issue = clone $ticket;
         $issue = $issue->issue;
         $status = Status::whereIn('id', [2, 3])->pluck('name', 'id');
-
+        return $issue;
         return view('ticket.show')->with('ticket', $ticket)
             ->with('status', $status)
             ->with('issue', $issue);
@@ -133,7 +160,8 @@ class FeedbacksController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public
+    function edit($id)
     {
         //
         $model = Feedbacks::find($id);
@@ -153,7 +181,8 @@ class FeedbacksController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public
+    function update(Request $request, $id)
     {
         //
         $status = $request['status'];
@@ -175,12 +204,14 @@ class FeedbacksController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public
+    function destroy($id)
     {
         //
     }
 
-    public function getDatatables()
+    public
+    function getDatatables()
     {
         $data = Feedbacks::join('issues as i', 'feedbacks.id_issue', '=', 'i.id')
             ->join('roles as r', 'feedbacks.assigned_to', '=', 'r.id')
@@ -244,7 +275,8 @@ class FeedbacksController extends Controller
         return $datatables;
     }
 
-    public function history(Request $request)
+    public
+    function history(Request $request)
     {
 
         $id = $request['id'];

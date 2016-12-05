@@ -25,11 +25,11 @@ class Feedbacks extends Model
     protected $dates = ['deleted_at'];
 
     public function detail() {
-        return $this->hasMany('\App\Feedback_Details','feedback_id');
+        return $this->hasMany('\App\Feedback_Details','id','feedback_id');
     }
 
     public function issue(){
-        return $this->hasOne('\App\Issue','id');
+        return $this->hasOne('\App\Issue','id','id_issue');
     }
 
     public function created_time()

@@ -8,6 +8,7 @@ use App\Feedbacks;
 use Yajra\Datatables\Facades\Datatables;
 use Illuminate\Support\Facades\DB;
 use Collective\Html\FormFacade;
+use Illuminate\Support\Facades\Auth;
 
 class IssueController extends Controller
 {
@@ -47,6 +48,7 @@ class IssueController extends Controller
         $jenis_pertanyaan = $request['jenis_pertanyaan'];
         $ruang = $request['ruang'];
         $avg_rate = $request['avg_rate'];
+        $category = $request['category'];
 
         if (empty($request['dosen'])) {
             $nama_dosen = null;
@@ -67,12 +69,12 @@ class IssueController extends Controller
         $model->avg_rate = $avg_rate;
         $model->nama_dosen = $nama_dosen;
         $model->matakuliah = $matakuliah;
+        $model->category = $category;
 
-        if($model->save()){
-            return redirect()->route('issue.store')->with('status','Record has been inserted !');
-        }
-        else
-            return redirect()->route('issue.store')->with('status','Fail to insert Issue !');
+        if ($model->save()) {
+            return redirect()->route('issue.store')->with('status', 'Record has been inserted !');
+        } else
+            return redirect()->route('issue.store')->with('status', 'Fail to insert Issue !');
     }
 
     /**
@@ -120,29 +122,42 @@ class IssueController extends Controller
         //
     }
 
-    public function getDatatables(){
+    public function getDatatables()
+    {
+
         $data = Issue::all();
+        $current_role = Auth::user()->role->name;
+        if ($current_role == "SDM") {
+            $data = $data->where('category', '=', 'Dosen');
+        } elseif ($current_role == "KAPRODI") {
+            $data = $data->where('category', '=', 'Dosen');
+        } elseif ($current_role == "BJM") {
+            $data = $data->where('category', '=', 'Belajar Mengajar');
+        } elseif ($current_role == "POP") {
+            $data = $data->whereIn('category', ['Sarana Prasarana Kelas', 'Pelayanan Umum']);
+        } elseif ($current_role == "BJM") {
+            $data = $data->whereIn('category', ['Pelayanan Unit']);
+        } else
+            $data = $data;
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
-                $ticket = Feedbacks::where('id_issue','=',$data->id)->first();
+                $ticket = Feedbacks::where('id_issue', '=', $data->id)->first();
 
-                if(empty($ticket)){
+                if (empty($ticket)) {
                     $button = FormFacade::open([
-                        'method'  =>  'get',
-                        'url' =>  route('ticket.create')
+                        'method' => 'get',
+                        'url' => route('ticket.create')
                     ]);
-                    $button .= FormFacade::hidden('issue_id',$data->id);
-                    $button .= FormFacade::submit('Buat Ticket',['class'    =>  'btn btn-success']);
+                    $button .= FormFacade::hidden('issue_id', $data->id);
+                    $button .= FormFacade::submit('Buat Ticket', ['class' => 'btn btn-success']);
                     $button .= FormFacade::close();
-                }
-                else
-                {
+                } else {
                     $button = FormFacade::open([
-                        'method'  =>  'get',
-                        'url' =>  route('ticket.edit',$ticket->id)
+                        'method' => 'get',
+                        'url' => route('ticket.edit', $ticket->id)
                     ]);
-                    $button .= FormFacade::submit('Lihat Ticket',['class'    =>  'btn btn-success']);
+                    $button .= FormFacade::submit('Lihat Ticket', ['class' => 'btn btn-success']);
                     $button .= FormFacade::close();
                 }
 

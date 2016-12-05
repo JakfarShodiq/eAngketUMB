@@ -125,7 +125,7 @@ class ReportController extends Controller
     {
         $periode = $request['periode'];
         $semester = $request['semester'];
-        $data = DB::table('report_issue_general')
+        $data = DB::table('report_issue_general_new')
             ->select(DB::Raw('
                 periode,semester,jenis_pertanyaan,text,round(avg(rate),2) as rate
             '))
@@ -165,7 +165,7 @@ class ReportController extends Controller
         $semester = $request['semester'];
         $pertanyaan = $request['pertanyaan'];
 
-        $data = DB::table('report_issue_general')
+        $data = DB::table('report_issue_general_new')
             ->where('periode', '=', $periode)
             ->where('semester', '=', $semester)
             ->where('text', '=', $pertanyaan);
@@ -189,6 +189,7 @@ class ReportController extends Controller
                     $detail .= FormFacade::hidden('jenis_pertanyaan', $data->jenis_pertanyaan, []);
                     $detail .= FormFacade::hidden('ruang', $data->ruang, []);
                     $detail .= FormFacade::hidden('avg_rate', $data->rate, []);
+                    $detail .= FormFacade::hidden('category', $data->category, []);
                     $detail .= csrf_field();
                     $detail .= '<button type="submit" id="btn-delete" class="btn btn-info">Assign Issue</button>';
                     $detail .= '</form>';
@@ -224,7 +225,7 @@ class ReportController extends Controller
         $periode = $request['periode'];
         $semester = $request['semester'];
 
-        $data = DB::table('report_issue_dosen')
+        $data = DB::table('report_issue_dosen_new')
             ->select(DB::Raw('periode,semester,jenis_pertanyaan,text,round(avg(rate),2) as rate'))
             ->groupBy(DB::Raw('periode,semester,jenis_pertanyaan,text'));
 
@@ -261,7 +262,7 @@ class ReportController extends Controller
         $semester = $request['semester'];
         $pertanyaan = $request['pertanyaan'];
 
-        $data = DB::table('report_issue_dosen')
+        $data = DB::table('report_issue_dosen_new')
             ->where('periode', '=', $periode)
             ->where('semester', '=', $semester)
             ->where('text', '=', $pertanyaan);
@@ -287,6 +288,7 @@ class ReportController extends Controller
                     $detail .= FormFacade::hidden('dosen', $data->dosen, []);
                     $detail .= FormFacade::hidden('matkul', $data->matkul, []);
                     $detail .= FormFacade::hidden('avg_rate', $data->rate, []);
+                    $detail .= FormFacade::hidden('category', $data->category, []);
                     $detail .= csrf_field();
                     $detail .= '<button type="submit" id="btn-delete" class="btn btn-info">Assign Issue</button>';
                     $detail .= '</form>';

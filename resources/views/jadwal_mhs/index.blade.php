@@ -52,7 +52,8 @@
 
                                     </form>
 
-                                    <table class="display" cellspacing="0" width="100%" id="kelas-table" name="kelas-table">
+                                    <table class="display" cellspacing="0" width="100%" id="kelas-table"
+                                           name="kelas-table">
                                         <thead>
                                         <tr>
                                             <th>Check</th>
@@ -67,15 +68,15 @@
                                         </tr>
                                         </thead>
                                     </table>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-
+                                    <div class="form-group row">
+                                        <div class="col-md-6 col-md-offset-4">
                                             <button id="SubmitSelected" class="btn btn-info">Tambah ke Jadwal</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="active tab-pane" id="jadwal-mhs">
-                                    <table class="display" cellspacing="0" width="100%" id="jadwal-mhs-table" name="jadwal-mhs-table">
+                                    <table class="display" cellspacing="0" width="100%" id="jadwal-mhs-table"
+                                           name="jadwal-mhs-table">
                                         <thead>
                                         <tr>
                                             <th>Mata Kuliah</th>
@@ -91,8 +92,6 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                         </div>
                     </div>
                 </div>
@@ -112,7 +111,9 @@
 
             $('select').select2();
         });
-        var mhs_table = $('#jadwal-mhs-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
+        var mhs_table = $('#jadwal-mhs-table').DataTable({
+            rowReorder: {selector: 'td:nth-child(2)'},
+            responsive: true,
             processing: true,
             serverSide: true,
             ajax: {
@@ -122,8 +123,8 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 'beforeSend': function (request) {
-                 request.setRequestHeader("token", "{{ csrf_token() }}");
-                 }
+                    request.setRequestHeader("token", "{{ csrf_token() }}");
+                }
             },
             columns: [
                 {data: 'matkul', name: 'matkul'},
@@ -137,7 +138,9 @@
             ]
         });
 
-        var table = $('#kelas-table').DataTable({ rowReorder: { 	selector: 'td:nth-child(2)'             }, 	responsive: true,
+        var table = $('#kelas-table').DataTable({
+                    rowReorder: {selector: 'td:nth-child(5)'},
+                    responsive: true,
                     processing: true,
                     serverSide: true,
                     ajax: {
@@ -147,11 +150,11 @@
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         'beforeSend': function (request) {
-                         request.setRequestHeader("token", "{{ csrf_token() }}");
-                         }
+                            request.setRequestHeader("token", "{{ csrf_token() }}");
+                        }
                     },
                     columns: [
-                        {data: 'check', name: 'check', orderable: false, searchable: false},
+                        {data: 'check', name: 'check', orderable: false, searchable: false },
                         {data: 'matkul', name: 'matkul'},
                         {data: 'tahun_ajaran', name: 'tahun_ajaran'},
                         {data: 'ruang', name: 'ruang'},
@@ -178,13 +181,13 @@
             })
             console.log(selected_jadwal);
             $.ajax({
-                url:'{{ route('jadwal-mhs.store') }}',
+                url: '{{ route('jadwal-mhs.store') }}',
                 type: 'post',
                 data: {
-                    'id_jadwal':    selected_jadwal,
-                    'id_mhs'   :    $('#mahasiswa').val()
+                    'id_jadwal': selected_jadwal,
+                    'id_mhs': $('#mahasiswa').val()
                 },
-                success:    function (result) {
+                success: function (result) {
 //                    console.log(result.message)
                     alert(result.message);
                     mhs_table.ajax.reload();

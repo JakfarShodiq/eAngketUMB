@@ -223,19 +223,24 @@
                     </ul>
                 </li>
 
-                @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','DEKAN','Administrator']))
+                @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','Administrator','POP','BJM']))
                     <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
                         <a href="/">
                             <i class="fa fa-paste "></i> <span>Hasil Angket</span>
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{ Request::is('report') ? 'active' : '' }}"><a
-                                        href="{{ route('report.index') }}"><i class="fa fa-building"></i>Fasilitas Umum</a>
-                            </li>
-                            <li class="{{ Request::is('report') ? 'active' : '' }}"><a
-                                        href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a>
-                            </li>
+                            @if(in_array(Auth::user()->role->name,['SDM','KAPRODI','Administrator']))
+                                <li class="{{ Request::is('report') ? 'active' : '' }}"><a
+                                            href="{{ route('report.index') }}"><i class="fa fa-building"></i>Fasilitas
+                                        Umum</a>
+                                </li>
+                            @endif
+                            @if(in_array(Auth::user()->role->name,['POP','BJM','Administrator']))
+                                <li class="{{ Request::is('report') ? 'active' : '' }}"><a
+                                            href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
@@ -249,7 +254,7 @@
                     </li>
                 @endif
 
-                @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
+                @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen','DEKAN','BMGS']))
                     <li class="{{ Request::is('issue') ? 'active' : '' }}">
                         <a href="{{ route('issue.index') }}">
                             <i class="fa fa-stack-overflow"></i> <span>Issue</span>
