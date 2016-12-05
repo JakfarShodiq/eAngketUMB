@@ -223,7 +223,7 @@
                     </ul>
                 </li>
 
-                @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','Administrator','POP','BJM']))
+                @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','Administrator','POP','BJM','SDM']))
                     <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
                         <a href="/">
                             <i class="fa fa-paste "></i> <span>Hasil Angket</span>
