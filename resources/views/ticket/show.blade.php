@@ -41,6 +41,20 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="created_by" class="col-md-4 control-label">Pembuat</label>
+                            <div class="col-xs-6">
+                                {{ Form::text('created_by',$created_by->name,array('class'   => 'form-control','id'  =>  'created_by','readonly'))  }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="roles" class="col-md-4 control-label">Jabatan</label>
+                            <div class="col-xs-6">
+                                {{ Form::text('roles',$roles,array('class'   => 'form-control','id'  =>  'roles','readonly'))  }}
+                            </div>
+                        </div>
+
                         @if($issue->jenis_pertanyaan == "Performansi Dosen")
                             <div class="form-group">
                                 <label for="issue" class="col-md-4 control-label">Ruang</label>

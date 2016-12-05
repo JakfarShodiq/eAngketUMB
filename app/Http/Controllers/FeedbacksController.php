@@ -123,14 +123,18 @@ class FeedbacksController extends Controller
     public
     function show($id)
     {
-        //
+        //ADD DETAIL TICKET
         $ticket = Feedbacks::find($id);
+        $created_by = User::find($ticket->created_by);
+        $roles = User::find($ticket->created_by)->role->name;
         $issue = clone $ticket;
         $issue = $issue->issue;
         $status = Status::whereIn('id', [2, 3])->pluck('name', 'id');
-        return $issue;
+//        return $issue;
         return view('ticket.show')->with('ticket', $ticket)
             ->with('status', $status)
+            ->with('roles', $roles)
+            ->with('created_by', $created_by)
             ->with('issue', $issue);
     }
 
@@ -163,7 +167,7 @@ class FeedbacksController extends Controller
     public
     function edit($id)
     {
-        //
+        //UPDATE TICKET DOANG MUNCUL KETIKA ROLE PEMBUAT / ADMIN
         $model = Feedbacks::find($id);
         $issue = clone $model;
         $issue = $issue->issue;
@@ -215,12 +219,29 @@ class FeedbacksController extends Controller
     {
         $data = Feedbacks::join('issues as i', 'feedbacks.id_issue', '=', 'i.id')
             ->join('roles as r', 'feedbacks.assigned_to', '=', 'r.id')
+            ->join('users as u', 'feedbacks.created_by', '=', 'u.id')
+            ->join('roles as rc', 'u.role_id', '=', 'rc.id')
             ->join('status as s', 's.id', '=', 'feedbacks.status');
-        $role = Auth::user()->role;
-        if ($role->name != "LPPM" and $role->name != "Administrator") {
+        $role = Auth::user()->role->name;
+        /*if ($role->name != "LPPM" and $role->name != "Administrator") {
             $data = $data->where('feedbacks.assigned_to', '=', $role->id);
+        }*/
+        if($role == "POP"){
+            $data = $data->where('rc.name','=','POP');
+        }elseif ($role == "BJM"){
+            $data = $data->where('rc.name','=','BJM');
+        }elseif ($role == "SDM"){
+            $data = $data->where('rc.name','=','SDM');
+        }elseif ($role == "KAPRODI"){
+            $data = $data->where('rc.name','=','KAPRODI');
         }
-
+        elseif($role == "Administrator")
+        {
+            $data = $data;
+        }
+        else{
+            $data = $data->where('r.name','=',$role);
+        }
         $data = $data->select(DB::raw(
             'feedbacks.id,
                     feedbacks.periode,
@@ -230,6 +251,7 @@ class FeedbacksController extends Controller
                     i.ruang,
                     i.matakuliah,
                     r.name,
+                    rc.name as created_by_role,
                     s.name as status'
         ));
 
@@ -252,14 +274,14 @@ class FeedbacksController extends Controller
                     $button .= FormFacade::hidden('id', $data->id);
                     $button .= FormFacade::submit('History Ticket', ['class' => 'btn btn-default']);
                     $button .= FormFacade::close();
-                } elseif ($user->name == "LPPM" or $user->name == "Administrator") {
+                } elseif ($data->created_by_role == $user->name or $user->name == "Administrator") {
                     $button = FormFacade::open([
                         'method' => 'get',
                         'url' => route('ticket.edit', $data->id)
                     ]);
                     $button .= FormFacade::submit('Update Ticket', ['class' => 'btn btn-success']);
                     $button .= FormFacade::close();
-                } elseif ($user->name != "LPPM" or $user->name != "Mahasiswa") {
+                } elseif ($data->name == $user->name) {
                     $button = FormFacade::open([
                         'method' => 'get',
                         'url' => route('ticket.show', $data->id)
