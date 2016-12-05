@@ -115,8 +115,11 @@ class DosenController extends Controller
             ->join('angket_details as ad', 'ad.angket_id', '=', 'a.id')
             ->join('pertanyaan as p', 'p.id', '=', 'ad.id_pt')
             ->join('jenis_pt as jpt', 'jpt.id', '=', 'p.jenis_pt')
+            ->join('kelas_categories as kc', 'kc.id', '=', 'jpt.kelas_category')
+            ->join('categories as ct', 'ct.id', '=', 'kc.id_category')
             ->where('jadwal.id', '=', $id)
-            ->where('jpt.name', '=', 'Performansi Dosen')
+//            ->where('jpt.name', '=', 'Performansi Dosen')
+            ->where('ct.name', '=', 'Dosen')
             ->select(DB::raw('ad.id_pt,jpt.name,p.text,round(avg(ad.rate),1) as avg_rate'))
             ->groupBy(DB::raw('
                 ad.id_pt,
