@@ -124,43 +124,48 @@ class DosenController extends Controller
                 jpt.name,
                 p.text'))
             ->get();
-        $data = '<table class="table table-condensed">
+
+        if ($jadwal->count() < 1 ) {
+            $data = '';
+        } else {
+            $data = '<table class="table table-condensed">
             <tr>
                 <th style="width: 10px">#</th>
                 <th>Pertanyaan</th>
                 <th>Rating</th>
                 <th style="width: 40px">Persentase</th>
             </tr>';
-        $counter = 1;
-        foreach ($jadwal as $jadwals) {
-            $data .= '<tr>';
-            $data .= '<td>'.$counter.'</td>';
-            $data .= '<td>'.$jadwals->text.'</td>';
-            $nilai = ($jadwals->avg_rate/5)*100;
-            if($nilai == 100){
-                $barstyle = 'progress-bar progress-bar-primary';
-                $badgestyle = 'badge bg-light-blue';
-            }elseif ($nilai >= 75 and $nilai < 100){
-                $barstyle = 'progress-bar progress-bar-success';
-                $badgestyle = 'badge bg-grenn';
-            }
-            elseif ($nilai >= 50 and $nilai < 75){
-                $barstyle = 'progress-bar progress-bar-yellow';
-                $badgestyle = 'badge bg-yellow';
-            }elseif ($nilai <50){
-                $barstyle = 'progress-bar progress-bar-danger';
-                $badgestyle = 'badge bg-red';
-            }
-            $data .= '<td>
+            $counter = 1;
+            foreach ($jadwal as $jadwals) {
+                $data .= '<tr>';
+                $data .= '<td>' . $counter . '</td>';
+                $data .= '<td>' . $jadwals->text . '</td>';
+                $nilai = ($jadwals->avg_rate / 5) * 100;
+                if ($nilai == 100) {
+                    $barstyle = 'progress-bar progress-bar-primary';
+                    $badgestyle = 'badge bg-light-blue';
+                } elseif ($nilai >= 75 and $nilai < 100) {
+                    $barstyle = 'progress-bar progress-bar-success';
+                    $badgestyle = 'badge bg-grenn';
+                } elseif ($nilai >= 50 and $nilai < 75) {
+                    $barstyle = 'progress-bar progress-bar-yellow';
+                    $badgestyle = 'badge bg-yellow';
+                } elseif ($nilai < 50) {
+                    $barstyle = 'progress-bar progress-bar-danger';
+                    $badgestyle = 'badge bg-red';
+                }
+                $data .= '<td>
                     <div class="progress progress-xs">
-                        <div class="'.$barstyle.'" style="width: '.$nilai.'%"></div>
+                        <div class="' . $barstyle . '" style="width: ' . $nilai . '%"></div>
                     </div>
                 </td>';
-            $data .= '<td><span class="'.$badgestyle.'">'.$nilai.'%</span></td>';
-            $data .= '</tr>';
-            $counter++;
+                $data .= '<td><span class="' . $badgestyle . '">' . $nilai . '%</span></td>';
+                $data .= '</tr>';
+                $counter++;
+            }
+            $data .= '</table>';
         }
-        $data .= '</table>';
+
         return response()->json([
             'success' => true,
             'message' => 'SUKSES !',
