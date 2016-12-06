@@ -224,7 +224,7 @@
                 </li>
 
                 @if(in_array(Auth::user()->role->name,['LPPM','KAPRODI','Administrator','POP','BJM','SDM']))
-                    <li class="treeview {{ in_array(Request::path(),array('jadwal','matakuliah')) ? 'active' : '' }}">
+                    <li class="treeview {{ in_array(Request::segment(1),array('report')) ? 'active' : '' }}">
                         <a href="/">
                             <i class="fa fa-paste "></i> <span>Hasil Angket</span>
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
@@ -239,6 +239,12 @@
                             @if(in_array(Auth::user()->role->name,['KAPRODI','SDM','Administrator']))
                                 <li class="{{ Request::is('report') ? 'active' : '' }}"><a
                                             href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a>
+                                </li>
+                            @endif
+                            @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
+                                <li class="{{ Request::is('report') ? 'active' : '' }}"><a
+                                            href="{{ route('report.index-penilaian-mhs') }}"><i
+                                                class="fa fa-bar-chart"></i>Penilaian Mahasiswa</a>
                                 </li>
                             @endif
                         </ul>
@@ -290,7 +296,7 @@
                     </li>
                 @endif
                 @if(in_array(Auth::user()->role->name,['Administrator']))
-                    <li class="treeview {{ in_array(Request::path(),array('user-mgt','matakuliah')) ? 'active' : '' }}">
+                    <li class="treeview {{ in_array(Request::path(),array('user-mgt','roles')) ? 'active' : '' }}">
                         <a href="/">
                             <i class="fa fa-gear"></i> <span>Settings</span>
                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>

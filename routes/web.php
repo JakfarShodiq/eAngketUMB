@@ -159,6 +159,16 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'report.datatables-perf-detail'
     ));
 
+    Route::get('report/datatables-penilaian-mhs', array(
+        'uses' => 'ReportController@datatables_penilaian_mhs',
+        'as' => 'report.datatables-penilaian-mhs'
+    ));
+
+    Route::get('report/penilaian-mhs', array(
+        'uses' => 'ReportController@index_penilaian_mhs',
+        'as' => 'report.index-penilaian-mhs'
+    ));
+
     Route::resource('report', 'ReportController');
 
     Route::get('issue/datatables', array(

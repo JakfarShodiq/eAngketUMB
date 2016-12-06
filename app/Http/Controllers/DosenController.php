@@ -146,7 +146,7 @@ class DosenController extends Controller
                     $badgestyle = 'badge bg-light-blue';
                 } elseif ($nilai >= 75 and $nilai < 100) {
                     $barstyle = 'progress-bar progress-bar-success';
-                    $badgestyle = 'badge bg-grenn';
+                    $badgestyle = 'badge bg-green';
                 } elseif ($nilai >= 50 and $nilai < 75) {
                     $barstyle = 'progress-bar progress-bar-yellow';
                     $badgestyle = 'badge bg-yellow';

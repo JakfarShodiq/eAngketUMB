@@ -307,4 +307,73 @@ class ReportController extends Controller
             ->make(true);
         return $datatables;
     }
+
+    public function index_penilaian_mhs()
+    {
+        $periode = DB::table('report_penilaian_mhs')->pluck('periode', 'periode');
+        $semester = DB::table('report_penilaian_mhs')->pluck('semester', 'semester');
+
+        return view('report.index_penilaian_mhs')->with('periode', $periode)->with('semester', $semester);
+    }
+
+    public function datatables_penilaian_mhs(Request $request)
+    {
+        $periode = $request['periode'];
+        $semester = $request['semester'];
+        $data = DB::table('report_penilaian_mhs');
+
+        if (empty($periode) and empty($semester)) {
+            $data = $data
+                ->where('periode', '=', '2016/2017')
+                ->where('semester', '=', 'Ganjil');
+        } else
+            $data = $data
+                ->where('periode', '=', $periode)
+                ->where('semester', '=', $semester);
+
+        $datatables = Datatables::of($data)
+            ->addColumn('rating', function ($data) {
+                $nilai = ($data->avg_rate / 5) * 100;
+                if ($nilai == 100) {
+                    $barstyle = 'progress-bar progress-bar-primary';
+                    $badgestyle = 'badge bg-light-blue';
+                } elseif ($nilai >= 75 and $nilai < 100) {
+                    $barstyle = 'progress-bar progress-bar-success';
+                    $badgestyle = 'badge bg-grenn';
+                } elseif ($nilai >= 50 and $nilai < 75) {
+                    $barstyle = 'progress-bar progress-bar-yellow';
+                    $badgestyle = 'badge bg-yellow';
+                } elseif ($nilai < 50) {
+                    $barstyle = 'progress-bar progress-bar-danger';
+                    $badgestyle = 'badge bg-red';
+                }
+                $rating = '<div class="progress progress-xs">
+                <div class="' . $barstyle . '" style="width: ' . $nilai . '%">
+                </div>
+                </div>';
+
+                return $rating;
+            })->addColumn('avg_rate', function ($data) {
+                $nilai = ($data->avg_rate / 5) * 100;
+                if ($nilai == 100) {
+                    $barstyle = 'progress-bar progress-bar-primary';
+                    $badgestyle = 'badge bg-light-blue';
+                } elseif ($nilai >= 75 and $nilai < 100) {
+                    $barstyle = 'progress-bar progress-bar-success';
+                    $badgestyle = 'badge bg-green';
+                } elseif ($nilai >= 50 and $nilai < 75) {
+                    $barstyle = 'progress-bar progress-bar-yellow';
+                    $badgestyle = 'badge bg-yellow';
+                } elseif ($nilai < 50) {
+                    $barstyle = 'progress-bar progress-bar-danger';
+                    $badgestyle = 'badge bg-red';
+                }
+                $rating = '<span class="' . $badgestyle . '">' . $nilai . '%</span>';
+
+                return $rating;
+            })
+            ->make(true);
+
+        return $datatables;
+    }
 }
