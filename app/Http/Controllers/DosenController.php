@@ -108,7 +108,6 @@ class DosenController extends Controller
     public function nilai(Request $request)
     {
         $id = $request['id'];
-//        return $id;
         $jadwal = Jadwal::find($id)
             ->join('jadwal_mhs as jmh', 'jmh.id_jadwal', '=', 'jadwal.id')
             ->join('angkets as a', 'a.id_jadwal_mhs', '=', 'jmh.id')
@@ -118,7 +117,6 @@ class DosenController extends Controller
             ->join('kelas_categories as kc', 'kc.id', '=', 'jpt.kelas_category')
             ->join('categories as ct', 'ct.id', '=', 'kc.id_category')
             ->where('jadwal.id', '=', $id)
-//            ->where('jpt.name', '=', 'Performansi Dosen')
             ->where('ct.name', '=', 'Dosen')
             ->select(DB::raw('ad.id_pt,jpt.name,p.text,round(avg(ad.rate),1) as avg_rate'))
             ->groupBy(DB::raw('
@@ -126,45 +124,48 @@ class DosenController extends Controller
                 jpt.name,
                 p.text'))
             ->get();
-        $data = '';
-
-
-        /*
-        <div class="col-xs-6">
-        {{ $pertanyaans->pertanyaan }}
-        </div>
-        <div class="col-xs-6">
-        */
+        $data = '<table class="table table-condensed">
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>Pertanyaan</th>
+                <th>Rating</th>
+                <th style="width: 40px">Persentase</th>
+            </tr>';
+        $counter = 1;
         foreach ($jadwal as $jadwals) {
-            $data .=  "<div class='col-xs-6'>";
-            $data .=  $jadwals->text;
-            $data .=  "</div>";
-            $data .= "<input name='$jadwals->id_pt' id='$jadwals->id_pt' class='rating rating-loading display-rating-tok' value='$jadwals->avg_rate' data-size='xs'>";
+            $data .= '<tr>';
+            $data .= '<td>'.$counter.'</td>';
+            $data .= '<td>'.$jadwals->text.'</td>';
+            $nilai = ($jadwals->avg_rate/5)*100;
+            if($nilai == 100){
+                $barstyle = 'progress-bar progress-bar-primary';
+                $badgestyle = 'badge bg-light-blue';
+            }elseif ($nilai >= 75 and $nilai < 100){
+                $barstyle = 'progress-bar progress-bar-success';
+                $badgestyle = 'badge bg-grenn';
+            }
+            elseif ($nilai >= 50 and $nilai < 75){
+                $barstyle = 'progress-bar progress-bar-yellow';
+                $badgestyle = 'badge bg-yellow';
+            }elseif ($nilai <50){
+                $barstyle = 'progress-bar progress-bar-danger';
+                $badgestyle = 'badge bg-red';
+            }
+            $data .= '<td>
+                    <div class="progress progress-xs">
+                        <div class="'.$barstyle.'" style="width: '.$nilai.'%"></div>
+                    </div>
+                </td>';
+            $data .= '<td><span class="'.$badgestyle.'">'.$nilai.'%</span></td>';
+            $data .= '</tr>';
+            $counter++;
         }
-
+        $data .= '</table>';
         return response()->json([
             'success' => true,
             'message' => 'SUKSES !',
             'data' => $data
         ], 200);
-
-        /*
-        select
-            ad.id_pt,
-              jpt.name,
-              p.text,
-              round(avg(ad.rate),1) as avg_rate
-            from angketumb.jadwal
-            INNER JOIN angketumb.jadwal_mhs on jadwal_mhs.id_jadwal = jadwal.id
-            INNER JOIN angketumb.angkets on angkets.id_jadwal_mhs = jadwal_mhs.id
-            INNER JOIN angketumb.angket_details ad on ad.angket_id = angkets.id
-            INNER JOIN angketumb.pertanyaan p on p.id = ad.id_pt
-            INNER JOIN angketumb.jenis_pt jpt on jpt.id = p.jenis_pt
-            WHERE jadwal.id = 5
-              AND jpt.name = 'Performansi Dosen'
-            GROUP BY ad.id_pt,p.text,jpt.name
-            ORDER BY avg_rate;
-        */
 
     }
 }
