@@ -88,12 +88,17 @@ class DosenController extends Controller
         //
     }
 
-    public function getDatatables()
+    public function getDatatables(Request $request)
     {
+        $dosen = $request['dosen'];
         $data = Jadwal::join('matakuliah', 'jadwal.id_matkul', '=', 'matakuliah.id')
             ->join('users', 'jadwal.id_dosen', '=', 'users.id')
-            ->where('jadwal.id_dosen', '=', Auth::user()->id)
+//            ->where('jadwal.id_dosen', '=', Auth::user()->id)
             ->select(DB::raw('jadwal.id as jadwal_id,matakuliah.name as matkul,tahun_ajaran,ruang,hari,time_start,time_end,qty,users.name as nama_dosen'));
+        if (empty($dosen)) {
+            $data = $data->where('jadwal.id_dosen', '=', Auth::user()->id);
+        } else
+            $data = $data->where('jadwal.id_dosen', '=', $dosen);
 
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
@@ -125,10 +130,41 @@ class DosenController extends Controller
                 p.text'))
             ->get();
 
-        if ($jadwal->count() < 1 ) {
+        if ($jadwal->count() < 1) {
             $data = '';
         } else {
+
+            $dosen = Jadwal::find($id)->dosen->name;
+            $matkul = Jadwal::find($id)->matkul->name;
+            $ruang = Jadwal::find($id)->ruang;
+            $mulai = Jadwal::find($id)->time_start;
+            $selesai = Jadwal::find($id)->time_end;
+//            $data = "<div class='row'>";
             $data = '<table class="table table-condensed">
+            <tr>
+                <th>Nama Dosen</th>
+                <td>' . $dosen . '</td>                
+            </tr>
+            <tr>
+                <th>Mata Kuliah</th>
+                <td>' . $matkul . '</td>
+                </tr>
+            <tr>
+                <th>Ruang</th>
+                <td>' . $ruang . '</td>
+            </tr>
+            <tr>
+                <th>Mulai</th>
+                <td>' . $mulai . '</td>
+            </tr>
+            <tr>
+                <th>Selesai</th>
+                <td>' . $selesai . '</td>
+            </tr>           
+            </table>';
+//            $data .= "</div>";
+            $data .= "<div class='row'>";
+            $data .= '<table class="table table-condensed">
             <tr>
                 <th style="width: 10px">#</th>
                 <th>Pertanyaan</th>
@@ -164,6 +200,7 @@ class DosenController extends Controller
                 $counter++;
             }
             $data .= '</table>';
+            $data .= "</div>";
         }
 
         return response()->json([

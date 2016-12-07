@@ -232,19 +232,28 @@
                         <ul class="treeview-menu">
                             @if(in_array(Auth::user()->role->name,['POP','BJM','Administrator']))
                                 <li class="{{ Request::is('report') ? 'active' : '' }}"><a
-                                            href="{{ route('report.index') }}"><i class="fa fa-building"></i>Fasilitas
+                                            href="{{ route('report.index') }}"><i class="fa fa-building"></i>Issue
+                                        Fasilitas
                                         Umum</a>
                                 </li>
                             @endif
                             @if(in_array(Auth::user()->role->name,['KAPRODI','SDM','Administrator']))
                                 <li class="{{ Request::is('report') ? 'active' : '' }}"><a
-                                            href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Performa Dosen</a>
+                                            href="{{ route('report.perf') }}"><i class="fa fa-users"></i>Issue Performa
+                                        Dosen</a>
                                 </li>
                             @endif
                             @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen']))
                                 <li class="{{ Request::is('report') ? 'active' : '' }}"><a
                                             href="{{ route('report.index-penilaian-mhs') }}"><i
                                                 class="fa fa-bar-chart"></i>Penilaian Mahasiswa</a>
+                                </li>
+                            @endif
+                            @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen','BGMS','POP']))
+                                <li class="{{ Request::is('report') ? 'active' : '' }}">
+                                    <a href="{{ route('report.index_rating_dosen') }}">
+                                        <i class="fa fa-star-half-empty"></i> <span>Rating Dosen</span>
+                                    </a>
                                 </li>
                             @endif
                         </ul>
@@ -326,7 +335,6 @@
                     @yield('submenu')
                 </small>
             </h1>
-
         </section>
 
         <!-- Main content -->

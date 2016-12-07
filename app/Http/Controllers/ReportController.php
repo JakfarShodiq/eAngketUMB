@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Issue;
+use App\User;
 use Illuminate\Http\Request;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\VarDumper\Cloner\Data;
@@ -356,16 +357,188 @@ class ReportController extends Controller
             })->addColumn('avg_rate', function ($data) {
                 $nilai = ($data->avg_rate / 5) * 100;
                 if ($nilai == 100) {
-                    $barstyle = 'progress-bar progress-bar-primary';
                     $badgestyle = 'badge bg-light-blue';
                 } elseif ($nilai >= 75 and $nilai < 100) {
-                    $barstyle = 'progress-bar progress-bar-success';
                     $badgestyle = 'badge bg-green';
                 } elseif ($nilai >= 50 and $nilai < 75) {
-                    $barstyle = 'progress-bar progress-bar-yellow';
                     $badgestyle = 'badge bg-yellow';
                 } elseif ($nilai < 50) {
+                    $badgestyle = 'badge bg-red';
+                }
+                $rating = '<span class="' . $badgestyle . '">' . $nilai . '%</span>';
+
+                return $rating;
+            })
+            ->make(true);
+
+        return $datatables;
+    }
+
+    public function index_rating_dosen()
+    {
+
+        $periode = DB::table('report_issue_dosen_new')->pluck('periode', 'periode');
+        $semester = DB::table('report_issue_dosen_new')->pluck('semester', 'semester');
+        $dosen = DB::table('report_issue_dosen_new')->pluck('dosen', 'id_dosen');
+        $dosen->put('all', 'All');
+        $semester->put('all', 'All');
+        $periode->put('all', 'All');
+
+        return view('report.rating_dosen')->with('periode', $periode)->with('semester', $semester)->with('dosen', $dosen);
+    }
+
+    public function datatables_rating_dosen(Request $request)
+    {
+
+        $periode = $request['periode'];
+        $semester = $request['semester'];
+        $id_dosen = $request['dosen'];
+
+        $data = DB::table('report_issue_dosen_new')
+            ->select(DB::Raw('periode,
+              semester,
+              id_dosen,
+              dosen,
+              round(avg(rate),2) as rate'))
+            ->groupBy(DB::raw('
+              periode,
+              semester,
+              id_dosen,
+              dosen'));
+
+        if (empty($periode) and empty($semester) and empty($id_dosen)) {
+            $data = $data
+                ->where('periode', '=', '2016/2017')
+                ->where('semester', '=', 'Ganjil');
+        } else
+        {
+            if($id_dosen != "all"){
+                $data = $data->where('id_dosen','=',$id_dosen);
+            }
+            if($periode != 'all'){
+                $data = $data->where('periode','=',$periode);
+            }
+            if($semester != 'all'){
+                $data = $data->where('semester','=',$semester);
+            }
+        }
+//        $data = $data->orderBy('rate','desc');
+        $datatables = Datatables::of($data)
+            ->addColumn('rating', function ($data) {
+                $barstyle = '';
+                $nilai = ($data->rate / 5) * 100;
+                if ($nilai == 100) {
+                    $barstyle = 'progress-bar progress-bar-primary';
+                } elseif ($nilai >= 75 and $nilai < 100) {
+                    $barstyle = 'progress-bar progress-bar-success';
+                } elseif ($nilai >= 50 and $nilai < 75) {
+                    $barstyle = 'progress-bar progress-bar-yellow';
+                } elseif ($nilai < 50) {
                     $barstyle = 'progress-bar progress-bar-danger';
+                }
+                $rating = '<div class="progress progress-xs">
+                <div class="' . $barstyle . '" style="width: ' . $nilai . '%">
+                </div>
+                </div>';
+
+                return $rating;
+            })->addColumn('rate', function ($data) {
+                $badgestyle = '';
+                $nilai = ($data->rate / 5) * 100;
+                if ($nilai == 100) {
+                    $badgestyle = 'badge bg-light-blue';
+                } elseif ($nilai >= 75 and $nilai < 100) {
+                    $badgestyle = 'badge bg-green';
+                } elseif ($nilai >= 50 and $nilai < 75) {
+                    $badgestyle = 'badge bg-yellow';
+                } elseif ($nilai < 50) {
+                    $badgestyle = 'badge bg-red';
+                }
+                $rating = '<span class="' . $badgestyle . '">' . $nilai . '%</span>';
+
+                return $rating;
+            })
+            ->addColumn('detail',function ($data){
+                $button = "<a class = 'btn btn-info' href=".route('report.index_detail_rating_dosen',$data->id_dosen).">Lihat Detail</a>";
+                return $button;
+            })
+            ->make(true);
+
+        return $datatables;
+    }
+
+    public function index_detail_rating_dosen($id){
+        $periode = DB::table('report_issue_dosen_new')->pluck('periode', 'periode');
+        $semester = DB::table('report_issue_dosen_new')->pluck('semester', 'semester');
+        $semester->put('all', 'All');
+        $periode->put('all', 'All');
+        $dosen = User::find($id);
+        return view('report.rating_dosen_detail')->with('periode', $periode)->with('semester', $semester)->with('dosen',$dosen);
+    }
+
+    public function datatables_detail_rating(Request $request){
+        $periode = $request['periode'];
+        $semester = $request['semester'];
+        $id_dosen = $request['dosen'];
+
+        $data = DB::table('report_issue_dosen_new')
+            ->where('id_dosen','=',$id_dosen)
+            ->select(DB::Raw('periode,
+              semester,
+              text,
+              id_dosen,           
+              dosen,
+              round(avg(rate),2) as rate'))
+            ->groupBy(DB::raw('
+              periode,
+              semester,
+              text,
+              id_dosen,
+              dosen'));
+
+        if (empty($periode) and empty($semester)) {
+            $data = $data
+                ->where('periode', '=', '2016/2017')
+                ->where('semester', '=', 'Ganjil');
+        } else
+        {
+            if($periode != 'all'){
+                $data = $data->where('periode','=',$periode);
+            }
+            if($semester != 'all'){
+                $data = $data->where('semester','=',$semester);
+            }
+        }
+
+        $datatables = Datatables::of($data)
+            ->addColumn('rating', function ($data) {
+                $barstyle = '';
+                $nilai = ($data->rate / 5) * 100;
+                if ($nilai == 100) {
+                    $barstyle = 'progress-bar progress-bar-primary';
+                } elseif ($nilai >= 75 and $nilai < 100) {
+                    $barstyle = 'progress-bar progress-bar-success';
+                } elseif ($nilai >= 50 and $nilai < 75) {
+                    $barstyle = 'progress-bar progress-bar-yellow';
+                } elseif ($nilai < 50) {
+                    $barstyle = 'progress-bar progress-bar-danger';
+                }
+                $rating = '<div class="progress progress-xs">
+                <div class="' . $barstyle . '" style="width: ' . $nilai . '%">
+                </div>
+                </div>';
+
+                return $rating;
+            })->addColumn('rate', function ($data) {
+                $badgestyle = '';
+                $nilai = ($data->rate / 5) * 100;
+                if ($nilai == 100) {
+                    $badgestyle = 'badge bg-light-blue';
+                } elseif ($nilai >= 75 and $nilai < 100) {
+                    $badgestyle = 'badge bg-green';
+                } elseif ($nilai >= 50 and $nilai < 75) {
+                    $badgestyle = 'badge bg-yellow';
+                } elseif ($nilai < 50) {
                     $badgestyle = 'badge bg-red';
                 }
                 $rating = '<span class="' . $badgestyle . '">' . $nilai . '%</span>';

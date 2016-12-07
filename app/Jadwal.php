@@ -25,4 +25,11 @@ class Jadwal extends Model
     public function jadwal(){
         return $this->hasMany('App\Matakuliah');
     }
+
+    public function dosen(){
+        return $this->hasOne('App\User','id','id_dosen');
+    }
+    public function matkul(){
+        return $this->hasOne('App\Matakuliah','id','id_matkul');
+    }
 }

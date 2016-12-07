@@ -146,6 +146,20 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'report.datatables-performance'
     ));
 
+    Route::get('report/rating-dosen-datatables', array(
+        'uses' => 'ReportController@datatables_rating_dosen',
+        'as' => 'report.rating-dosen-datatables'
+    ));
+    Route::get('report/datatables_detail_rating', array(
+        'uses' => 'ReportController@datatables_detail_rating',
+        'as' => 'report.datatables_detail_rating'
+    ));
+
+    Route::get('report/rating-dosen-detail/{id}',array(
+        'uses'  => 'ReportController@index_detail_rating_dosen',
+        'as'    =>  'report.index_detail_rating_dosen'
+    ));
+
     //DISPLAY GENERAL ISSUE
     Route::post('report/perf-detail',
         [
@@ -167,6 +181,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('report/penilaian-mhs', array(
         'uses' => 'ReportController@index_penilaian_mhs',
         'as' => 'report.index-penilaian-mhs'
+    ));
+
+    Route::get('report/rating-dosen', array(
+        'uses' => 'ReportController@index_rating_dosen',
+        'as' => 'report.index_rating_dosen'
     ));
 
     Route::resource('report', 'ReportController');
