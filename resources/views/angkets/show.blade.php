@@ -38,7 +38,7 @@
                                     @foreach($jenispt as $jenispts)
                                         <h3>{{ $jenispts->categories }}</h3>
                                         @foreach($pertanyaan as $pertanyaans)
-                                            @if($jenispts->categories == $pertanyaans->jpt)
+                                            @if($jenispts->categories == $pertanyaans->category)
                                                 <div class="row">
                                                     <div class="col-xs-6">
                                                         {{ $pertanyaans->pertanyaan }}
