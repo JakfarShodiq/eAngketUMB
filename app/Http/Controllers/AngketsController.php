@@ -82,7 +82,6 @@ class AngketsController extends Controller
         //
         $angkets = Angkets::find($id);
         $note = $angkets->note;
-//        return $angkets;
         $user = User::find($angkets->id_mhs);
         $pertanyaan = clone $angkets;
         $pertanyaan = $pertanyaan
@@ -92,13 +91,11 @@ class AngketsController extends Controller
             ->join('kelas_categories as kc', 'jpt.kelas_category', '=', 'kc.id')
             ->join('categories as c', 'c.id', '=', 'kc.id_category')
         ->where('angkets.id','=',$angkets->id);
-//        Log::info($pertanyaan->toSql());
-//            ->select(DB::raw('p.id,p.text'));
-//        return $pertanyaan->get();
 
         $jenispt = clone $pertanyaan;
         $matkul = clone $pertanyaan;
-        $jenispt = $jenispt->select(DB::raw('distinct(c.name) as categories'))->orderBy('categories')->get();
+        $categories = $jenispt->select(DB::raw('distinct(c.name) as categories'))->orderBy('categories')->get();
+        $jenispt = $jenispt->select(DB::raw('distinct(jpt.name) as jenis_pertanyaan,c.name as categories'))->orderBy('jenis_pertanyaan')->get();
 
         $matkul = $matkul->join('jadwal_mhs','jadwal_mhs.id','=','angkets.id_jadwal_mhs')
             ->join('jadwal','jadwal.id','=','jadwal_mhs.id_jadwal')
@@ -111,6 +108,7 @@ class AngketsController extends Controller
             ->with('note', $note)
             ->with('jenispt', $jenispt)
             ->with('matkul', $matkul)
+            ->with('categories', $categories)
             ->with('pertanyaan', $pertanyaan);
     }
 
@@ -211,12 +209,11 @@ class AngketsController extends Controller
             ->join('categories as c', 'c.id', '=', 'kc.id_category')
             ->join('pertanyaan as p', 'p.jenis_pt', '=', 'jpt.id')
             ->where('jadwal_mhs.id', '=', $id);
-//            ->select(DB::raw('p.id,p.text'));
 
-//        return $pertanyaan->toSql();
         $jenispt = clone $pertanyaan;
         $matkul = clone $pertanyaan;
-        $jenispt = $jenispt->select(DB::raw('distinct(c.name) as categories'))->orderBy('categories')->get();
+        $categories = $jenispt->select(DB::raw('distinct(c.name) as categories'))->orderBy('categories')->get();
+        $jenispt = $jenispt->select(DB::raw('distinct(jpt.name) as jenis_pertanyaan,c.name as categories'))->orderBy('jenis_pertanyaan')->get();
         $matkul = $matkul->select(DB::raw('distinct(mt.name) as matkul'))->first();
 
         $pertanyaan = $pertanyaan->select(DB::raw('distinct(p.id) as id,c.name as category,jpt.name as jpt,p.text as pertanyaan'))->get();
@@ -225,7 +222,7 @@ class AngketsController extends Controller
             ->with('id', $id_angkets)
             ->with('jenispt', $jenispt)
             ->with('matkul', $matkul)
+            ->with('categories', $categories)
             ->with('pertanyaan', $pertanyaan);
-//        return $pertanyaan;
     }
 }

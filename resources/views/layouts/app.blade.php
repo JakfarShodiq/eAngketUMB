@@ -7,12 +7,14 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="{{ URL::asset('plugins/datepicker/datepicker3.css') }}">
+    <script src="{{ URL::asset('plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
+    <script src="{{ URL::asset('plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{ URL::asset('plugins\select2\select2.full.min.js') }}"></script>
     <!-- Scripts -->
     <script>
         window.Laravel = <?php echo json_encode([
@@ -90,6 +92,7 @@
 @yield('content')
 
 <!-- Scripts -->
-<script src="/js/app.js"></script>
+{{--<script src="/js/app.js"></script>--}}
+@yield('script')
 </body>
 </html>

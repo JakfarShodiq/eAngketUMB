@@ -125,7 +125,7 @@
                                 <label for="birth_date" class="col-md-4 control-label">Birth Date</label>
 
                                 <div class="col-md-6">
-                                    {{ Form::text('birth_date','',array('class'    =>  'form-control')) }}
+                                    {{ Form::text('birth_date','',array('class'    =>  'form-control','id' => 'birth_date')) }}
                                 </div>
                             </div>
                             <div class="form-group">
@@ -148,4 +148,14 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#birth_date').datepicker({
+            format: "yyyy-mm-dd"
+        });
+    });
+</script>
 @endsection

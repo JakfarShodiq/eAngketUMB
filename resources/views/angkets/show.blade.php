@@ -35,21 +35,27 @@
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-md-12">
-                                    @foreach($jenispt as $jenispts)
-                                        <h3>{{ $jenispts->categories }}</h3>
-                                        @foreach($pertanyaan as $pertanyaans)
-                                            @if($jenispts->categories == $pertanyaans->category)
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        {{ $pertanyaans->pertanyaan }}
-                                                    </div>
-                                                    <div class="col-xs-6">
-                                                        <input name="{{ $pertanyaans->id }}" id="{{ $pertanyaans->id }}"
-                                                               class="rating rating-loading display-rating-tok"
-                                                               value="{{ $pertanyaans->rate }}" data-size="xs">
-                                                    </div>
-                                                </div>
+                                    @foreach($categories as $category)
+                                        <h2>{{ $category->categories }}</h2>
+                                        @foreach($jenispt as $jpt)
+                                            @if($jpt->categories == $category->categories)
+                                                <h3> {{ $jpt->jenis_pertanyaan }}</h3>
                                             @endif
+                                            @foreach($pertanyaan as $pertanyaans)
+                                                @if($category->categories == $pertanyaans->category and $pertanyaans->jpt == $jpt->jenis_pertanyaan)
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            {{ $pertanyaans->pertanyaan }}
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <input name="{{ $pertanyaans->id }}"
+                                                                   id="{{ $pertanyaans->id }}"
+                                                                   class="rating rating-loading display-rating-tok"
+                                                                   value="{{ $pertanyaans->rate }}" data-size="xs">
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
                                         @endforeach
                                     @endforeach
                                 </div>
