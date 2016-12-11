@@ -56,8 +56,10 @@
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <!-- Datatables -->
     <script src="{{ URL::asset('plugins\datatables\jquery.dataTables.min.1.10.12.js') }}"></script>
+    <script src="{{ URL::asset('plugins\datatables\dataTables.bootstrap.min.js') }}"></script>
     <script src="{{ URL::asset('plugins\datatables\extensions\RawReorder\dataTables.rowReorder.min.js') }}"></script>
-    <script src="{{ URL::asset('plugins\datatables\extensions\Responsive\dataTables.responsive.min.js') }}"></script>
+    <script src="{{ URL::asset('plugins\datatables\extensions\Responsive\responsive.bootstrap.min.js') }}"></script>
+    <script src="{{ URL::asset('plugins\datatables\extensions\Responsive\dataTables.responsive.2.1.1.min.js') }}"></script>
     <script src="{{ URL::asset('plugins\datatables\dataTables.select.min.js') }}"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
