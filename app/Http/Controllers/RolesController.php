@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Roles;
 use Collective\Html\FormFacade;
 use Illuminate\Http\Request;
+use Symfony\Component\DomCrawler\Form;
 use Yajra\Datatables\Facades\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
@@ -94,6 +95,10 @@ class RolesController extends Controller
     public function destroy($id)
     {
         //
+//        dd('test om');
+        $model = Roles::find($id)->delete();
+
+        return redirect()->route('roles.index')->with('status', 'Record successfully deleted !');
     }
 
     public function getDatatables(){
@@ -102,11 +107,20 @@ class RolesController extends Controller
         '));
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
-                $delete = FormFacade::submit('Delete',[
-                    'method'  =>   'post',
-                    'url'   => route('roles.destroy',$data->id),
-                    'class' =>  'btn btn-danger'
+                $delete = FormFacade::open([
+                   'url'    =>  route('roles.destroy',$data->id),
+                    'method'    => 'DELETE',
                 ]);
+                $delete .= FormFacade::submit('Delete',['class' =>  'btn btn-danger']);
+                $delete .= FormFacade::close();
+//                $delete = FormFacade::hidden('_method','DELETE');
+//                $delete .= csrf_field();
+//                $delete .= "<a class='btn btn-danger' href = '".route('roles.destroy',$data->id)."'>Delete</a>";
+//                $delete = FormFacade::submit('Delete',[
+//                    'method'  =>   'post',
+//                    'url'   => route('roles.destroy',$data->id),
+//                    'class' =>  'btn btn-danger'
+//                ]);
                 return $delete;
             })
             ->make(true);
