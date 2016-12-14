@@ -132,6 +132,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#btn-add').prop('disabled', 'disabled');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -185,8 +186,15 @@
                         nama.val(rowData[0].name);
                         nim.val(rowData[0].identity_number);
                         role_id.val(rowData[0].role_id);
-
+                        $('#btn-add').prop('disabled', false);
                     })
+                    .on('deselect', function (e, dt, type, indexes) {
+                        id_user.val(null);
+                        nama.val(null);
+                        nim.val(null);
+                        role_id.val(null);
+                        $('#btn-add').prop('disabled', 'disabled');
+                    });
         })
     </script>
 @endsection

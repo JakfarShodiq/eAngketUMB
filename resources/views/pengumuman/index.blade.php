@@ -113,7 +113,8 @@
                         <div class="form-group row">
                             <div class="col-md-6 col-md-offset-4">
                                 {{ Form::submit('Tambahkan',[
-                                'class' =>  'btn btn-success'
+                                'class' =>  'btn btn-success',
+                                'id'    =>  'btn-add'
                                 ]) }}
                             </div>
                         </div>
@@ -128,6 +129,7 @@
             <meta name="csrf-token" content="{{ csrf_token() }}">
             <script type="text/javascript">
                 $(document).ready(function () {
+                    $('#btn-add').prop('disabled', 'disabled');
                     $.ajaxSetup({
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -196,6 +198,11 @@
                             var ticket_id = rowData[0].id;
 //                            console.log(rowData[0].id);
                             id_ticket.val(ticket_id);
+                            $('#btn-add').prop('disabled', false);
                         })
+                        .on('deselect', function (e, dt, type, indexes) {
+                            id_ticket.val(null);
+                            $('#btn-add').prop('disabled', 'disabled');
+                        });
             </script>
 @endsection
