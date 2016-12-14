@@ -38,6 +38,7 @@
                             <tr>
                                 <th>Periode</th>
                                 <th>Semester</th>
+                                <th>Category</th>
                                 <th>Jenis Pertanyaan</th>
                                 <th>Ruang</th>
                                 <th>Pertanyaan</th>
@@ -79,6 +80,7 @@
                 columns: [
                     {data: 'periode', name: 'periode'},
                     {data: 'semester', name: 'semester'},
+                    {data: 'category', name: 'category'},
                     {data: 'jenis_pertanyaan', name: 'jenis_pertanyaan'},
                     {data: 'ruang', name: 'ruang'},
                     {data: 'text', name: 'text'},

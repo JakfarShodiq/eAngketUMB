@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Angkets;
 use App\Matakuliah;
 use Collective\Html\FormFacade;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -126,11 +127,12 @@ class ReportController extends Controller
     {
         $periode = $request['periode'];
         $semester = $request['semester'];
+        $current_role = Auth::user()->role->name;
         $data = DB::table('report_issue_general_new')
             ->select(DB::Raw('
-                periode,semester,jenis_pertanyaan,text,round(avg(rate),2) as rate
+                periode,semester,category,jenis_pertanyaan,text,round(avg(rate),2) as rate
             '))
-            ->groupBy(DB::Raw('periode,semester,jenis_pertanyaan,text'));
+            ->groupBy(DB::Raw('periode,semester,category,jenis_pertanyaan,text'));
 
         if (empty($periode) and empty($semester)) {
             $data = $data
@@ -141,6 +143,18 @@ class ReportController extends Controller
             $data = $data
                 ->where('periode', '=', $periode)
                 ->where('semester', '=', $semester);
+        if ($current_role == "SDM") {
+            $data = $data->where('category', '=', 'Dosen');
+        } elseif ($current_role == "KAPRODI") {
+            $data = $data->where('category', '=', 'Dosen');
+        } elseif ($current_role == "BJM") {
+            $data = $data->where('category', '=', 'Belajar Mengajar');
+        } elseif ($current_role == "POP") {
+            $data = $data->whereIn('category', ['Sarana Prasarana Kelas', 'Pelayanan Umum']);
+            /*} elseif ($current_role == "BJM") {
+                $data = $data->whereIn('category', ['Pelayanan Unit']);*/
+        } else
+            $data = $data;
 
         $data = $data->orderBy('rate')->limit(10);
 
@@ -410,16 +424,15 @@ class ReportController extends Controller
             $data = $data
                 ->where('periode', '=', '2016/2017')
                 ->where('semester', '=', 'Ganjil');
-        } else
-        {
-            if($id_dosen != "all"){
-                $data = $data->where('id_dosen','=',$id_dosen);
+        } else {
+            if ($id_dosen != "all") {
+                $data = $data->where('id_dosen', '=', $id_dosen);
             }
-            if($periode != 'all'){
-                $data = $data->where('periode','=',$periode);
+            if ($periode != 'all') {
+                $data = $data->where('periode', '=', $periode);
             }
-            if($semester != 'all'){
-                $data = $data->where('semester','=',$semester);
+            if ($semester != 'all') {
+                $data = $data->where('semester', '=', $semester);
             }
         }
 //        $data = $data->orderBy('rate','desc');
@@ -458,8 +471,8 @@ class ReportController extends Controller
 
                 return $rating;
             })
-            ->addColumn('detail',function ($data){
-                $button = "<a class = 'btn btn-info' href=".route('report.index_detail_rating_dosen',$data->id_dosen).">Lihat Detail</a>";
+            ->addColumn('detail', function ($data) {
+                $button = "<a class = 'btn btn-info' href=" . route('report.index_detail_rating_dosen', $data->id_dosen) . ">Lihat Detail</a>";
                 return $button;
             })
             ->make(true);
@@ -467,22 +480,24 @@ class ReportController extends Controller
         return $datatables;
     }
 
-    public function index_detail_rating_dosen($id){
+    public function index_detail_rating_dosen($id)
+    {
         $periode = DB::table('report_issue_dosen_new')->pluck('periode', 'periode');
         $semester = DB::table('report_issue_dosen_new')->pluck('semester', 'semester');
         $semester->put('all', 'All');
         $periode->put('all', 'All');
         $dosen = User::find($id);
-        return view('report.rating_dosen_detail')->with('periode', $periode)->with('semester', $semester)->with('dosen',$dosen);
+        return view('report.rating_dosen_detail')->with('periode', $periode)->with('semester', $semester)->with('dosen', $dosen);
     }
 
-    public function datatables_detail_rating(Request $request){
+    public function datatables_detail_rating(Request $request)
+    {
         $periode = $request['periode'];
         $semester = $request['semester'];
         $id_dosen = $request['dosen'];
 
         $data = DB::table('report_issue_dosen_new')
-            ->where('id_dosen','=',$id_dosen)
+            ->where('id_dosen', '=', $id_dosen)
             ->select(DB::Raw('periode,
               semester,
               text,
@@ -500,13 +515,12 @@ class ReportController extends Controller
             $data = $data
                 ->where('periode', '=', '2016/2017')
                 ->where('semester', '=', 'Ganjil');
-        } else
-        {
-            if($periode != 'all'){
-                $data = $data->where('periode','=',$periode);
+        } else {
+            if ($periode != 'all') {
+                $data = $data->where('periode', '=', $periode);
             }
-            if($semester != 'all'){
-                $data = $data->where('semester','=',$semester);
+            if ($semester != 'all') {
+                $data = $data->where('semester', '=', $semester);
             }
         }
 

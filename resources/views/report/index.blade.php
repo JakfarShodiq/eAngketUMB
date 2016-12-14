@@ -64,6 +64,7 @@
                             <tr>
                                 <th>Periode</th>
                                 <th>Semester</th>
+                                <th>Category</th>
                                 <th>Jenis Pertanyaan</th>
                                 <th>Pertanyaan</th>
                                 <th>Rate</th>
@@ -103,6 +104,7 @@
                 columns: [
                     {data: 'periode', name: 'periode'},
                     {data: 'semester', name: 'semester'},
+                    {data: 'category', name: 'category'},
                     {data: 'jenis_pertanyaan', name: 'jenis_pertanyaan'},
                     {data: 'text', name: 'text'},
                     {data: 'rate', name: 'rate', orderable: true},
