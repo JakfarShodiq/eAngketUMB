@@ -9,6 +9,7 @@ use Yajra\Datatables\Facades\Datatables;
 use Illuminate\Support\Facades\DB;
 use Collective\Html\FormFacade;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class IssueController extends Controller
 {
@@ -135,11 +136,14 @@ class IssueController extends Controller
             $data = $data->where('category', '=', 'Belajar Mengajar');
         } elseif ($current_role == "POP") {
             $data = $data->whereIn('category', ['Sarana Prasarana Kelas', 'Pelayanan Umum']);
-        } elseif ($current_role == "BJM") {
-            $data = $data->whereIn('category', ['Pelayanan Unit']);
+        /*} elseif ($current_role == "BJM") {
+            $data = $data->whereIn('category', ['Pelayanan Unit']);*/
         } else
             $data = $data;
-
+        $query = clone $data;
+        Log::info($current_role);
+        Log::info('TEST OM');
+//        Log::info($query->toSql());
         $datatables = Datatables::of($data)
             ->addColumn('action', function ($data) {
                 $ticket = Feedbacks::where('id_issue', '=', $data->id)->first();
