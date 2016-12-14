@@ -233,7 +233,10 @@ class FeedbacksController extends Controller
         }elseif ($role == "SDM"){
             $data = $data->where('rc.name','=','SDM');
         }elseif ($role == "KAPRODI"){
-            $data = $data->where('rc.name','=','KAPRODI');
+            $data = $data
+                ->whereRaw('rc.name = \'KAPRODI\' or r.name = \'KAPRODI\'');
+//                ->where('rc.name','=','KAPRODI')
+//                ->where('r.name','=','KAPRODI');
         }
         elseif($role == "Administrator")
         {
