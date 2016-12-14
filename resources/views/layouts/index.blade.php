@@ -251,7 +251,7 @@
                                                 class="fa fa-bar-chart"></i>Penilaian Mahasiswa</a>
                                 </li>
                             @endif
-                            @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen','BGMS','POP']))
+                            @if(!in_array(Auth::user()->role->name,['Mahasiswa','Dosen','BGMS','POP','BJM']))
                                 <li class="{{ Request::is('report') ? 'active' : '' }}">
                                     <a href="{{ route('report.index_rating_dosen') }}">
                                         <i class="fa fa-star-half-empty"></i> <span>Rating Dosen</span>
