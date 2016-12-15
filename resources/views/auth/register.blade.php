@@ -10,11 +10,18 @@
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                             {{ csrf_field() }}
 
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->has('identity_number') ? ' has-error' : '' }}">
                                 <label for="identity_number" class="col-md-4 control-label">Identity Number</label>
 
                                 <div class="col-md-6">
                                     {{ Form::text('identity_number','',array('class'    =>  'form-control')) }}
+
+                                    @if ($errors->has('identity_number'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('identity_number') }}</strong>
+                                    </span>
+                                    @endif
+
                                 </div>
                             </div>
 
@@ -94,11 +101,17 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->has('phone') ? ' has-error' : '' }}">
                                 <label for="phone" class="col-md-4 control-label">Mobile Number</label>
 
                                 <div class="col-md-6">
                                     {{ Form::text('phone','',array('class'    =>  'form-control')) }}
+
+                                    @if ($errors->has('phone'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('phone') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
 
