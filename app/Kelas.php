@@ -3,12 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Kelas extends Model
 {
     //
+    use SoftDeletes;
     protected $table = 'kelas';
     protected $fillable = ['name','status'];
+    protected $dates = ['deleted_at'];
 
     public function category(){
         return $this->belongsToMany('App\Categories','kelas_categories','id_kelas','id_category');

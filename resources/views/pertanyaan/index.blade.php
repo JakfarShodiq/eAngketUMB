@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: USER
+ * User: Fajar Ramdhani
  * Date: 11/5/2016
  * Time: 1:41 PM
  */
@@ -119,11 +119,11 @@
             columns: [
 //                ->select(['jenis_pt.id as id', 'jenis_pt.name as jenispt_name', 'categories.name as categories_name','kelas.name as kelas_name']);
 //                ->select(['pertanyaan.id as id', 'pertanyaan.text', 'pertanyaan.status','categories.name as categories_name','kelas.name as kelas_name']);
-                {data: 'kelas_name', name: 'kelas_name'},
-                {data: 'categories_name', name: 'categories_name'},
-                {data: 'jenis_pt_name', name: 'jenis_pt_name'},
+                {data: 'kelas_name', name: 'kelas.name'},
+                {data: 'categories_name', name: 'categories.name'},
+                {data: 'jenis_pt_name', name: 'jenis_pt.name'},
                 {data: 'text', name: 'text'},
-                {data: 'status', name: 'status'},
+                {data: 'status', name: 'status',searchable: false},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
