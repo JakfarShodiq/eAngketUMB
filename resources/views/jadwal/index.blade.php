@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-4 control-label" for="roles">Mata Kuliah</label>
+                                <label class="col-sm-4 control-label" for="roles">Dosen</label>
                                 <div class="col-sm-6">
                                     {{ Form::select('dosen',$dosen,'',['id'   =>  'dosen','class'   =>  'select2'])}}
                                 </div>
