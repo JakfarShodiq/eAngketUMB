@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="roles">Mata Kuliah</label>
+                                <label class="col-md-4 control-label" for="roles">Dosen</label>
                                 <div class="col-md-4">
                                     {{ Form::select('dosen',$dosen,$model->id_dosen,['id'   =>  'dosen','class'   =>  'form-control select2'])}}
                                 </div>
